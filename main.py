@@ -14,6 +14,7 @@
 
 # [START gae_python37_app]
 from flask import Flask
+import requests
 
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -25,6 +26,20 @@ app = Flask(__name__)
 def hello():
     """Return a friendly HTTP greeting."""
     return 'Hello World!'
+
+
+@app.route('/test')
+def test():
+    # Fetch from production
+    url = 'http://www.goingwalkabout.net/export/events/'
+
+    response = requests.get(url=url)
+
+    print(response.status_code)
+    print(response.headers)
+    print(response.content)
+
+    return "Dit is een test"
 
 
 if __name__ == '__main__':
