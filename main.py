@@ -13,8 +13,10 @@
 # limitations under the License.
 
 # [START gae_python37_app]
+import os
 from flask import Flask
 import requests
+from google.cloud import firestore
 
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -40,6 +42,21 @@ def test():
     print(response.content)
 
     return "Dit is een test"
+
+
+@app.route('/dbtest')
+def dbtest():
+
+    credential_path = os.path.join(os.path.dirname(__file__), 'secrets/gwa-net-13e914d23139.json')
+    db = firestore.Client.from_service_account_json(credential_path)
+
+    users_ref = db.collection(u'users')
+    docs = users_ref.get()
+
+    for doc in docs:
+        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+
+    return "This is a DB test"
 
 
 if __name__ == '__main__':
