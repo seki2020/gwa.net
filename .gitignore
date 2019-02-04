@@ -1,5 +1,16 @@
+# Random files
+*.orig
+*.pyc
+*.DS_Store
+.project
+.pydevproject
+.idea
+.vscode/
+.settings/
+
 # Google App Engine generated folder
 appengine-generated/
 
 .idea/
 secrets/
+backend/lib/
