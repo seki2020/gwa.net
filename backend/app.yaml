@@ -1,4 +1,5 @@
 runtime: python27
+service: default
 api_version: 1
 threadsafe: true
 
