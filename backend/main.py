@@ -1,6 +1,10 @@
 import webapp2
 from google.appengine.api import taskqueue
+from google.appengine.api import urlfetch
+from google.cloud import firestore
 from flask import Flask, render_template, request
+import json
+import os
 import logging
 
 app = Flask(__name__)
@@ -31,6 +35,36 @@ def run_task():
 
     return ""
 
+
+@app.route("/migrate")
+def migrate():
+    logging.warning("Migrate stuff")
+
+    url = 'http://www.goingwalkabout.net/export/events/'
+
+    response = urlfetch.fetch(url=url)
+    result = json.loads(response.content)
+
+    print(result)
+    trips = result["response"]["events"]
+    for trip in trips:
+        print(trip["name"])
+
+    return "Done doing migration"
+
+
+@app.route("/dbtest")
+def dbtest():
+    credential_path = os.path.join(os.path.dirname(__file__), '../secrets/gwa-net-13e914d23139.json')
+    db = firestore.Client.from_service_account_json(credential_path)
+
+    users_ref = db.collection(u'users')
+    docs = users_ref.get()
+
+    for doc in docs:
+        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+
+    return "This is a DB test"
 
 @app.errorhandler(500)
 def server_error(e):
