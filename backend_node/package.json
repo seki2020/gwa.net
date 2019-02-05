@@ -1,0 +1,15 @@
+{
+  "name": "gwa-backend",
+  "version": "1.0.0",
+  "description": "Backend for the GWA ios client",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "aad@aadjemonkeyrock.com",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

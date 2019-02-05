@@ -8,6 +8,9 @@
 .vscode/
 .settings/
 
+# Node
+node_modules/
+
 # Google App Engine generated folder
 appengine-generated/
 
