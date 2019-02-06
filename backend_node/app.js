@@ -1,5 +1,8 @@
 const express = require('express');
+const morgan = require('morgan')
 const app = express();
+
+app.use(morgan('combined'))
 
 app.get('/', (req, res) => {
   res.send('Hello from Aadje... Engine!');
@@ -78,10 +81,16 @@ function getImage(tripId, imageId, res) {
     .bucket(bucketName)
     .file(srcFilename)
 
+  console.log("We got a file, or not?")
+  // console.log(f)  
   f.download().then(function(data) {
+    console.log(data)
     var content = data[0]
-    res.set('Content-Type', 'image/jpg');
+    res.set('Content-Type', 'image/jpeg');
     res.send(content)
+  }).catch(function() {
+    console.log("We got error")
+    res.end()
   })
 
   // res.send()  
