@@ -2,7 +2,12 @@ const express = require('express');
 const morgan = require('morgan')
 const app = express();
 
+// Controllers
+const migrate = require('./controllers/migrate')
+
+// Middle ware and routing
 app.use(morgan('combined'))
+app.use('/migrate', migrate)
 
 app.get('/', (req, res) => {
   res.send('Hello from Aadje... Engine!');
