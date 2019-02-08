@@ -1,0 +1,14 @@
+var express = require('express')
+var router = express.Router()
+
+const migrate = require('../controllers/migrate')
+
+// define the home page route
+router.get('/', function (req, res) {
+  res.send('Migrate home page')
+})
+
+router.get('/users', migrate.getUsers)
+router.get('/trips', migrate.getTrips)
+
+module.exports = router

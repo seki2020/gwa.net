@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const app = express();
 
 // Controllers
-const migrate = require('./controllers/migrate')
+const migrate = require('./routers/migrate')
 
 // Middle ware and routing
 app.use(morgan('combined'))
