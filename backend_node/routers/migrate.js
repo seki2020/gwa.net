@@ -10,5 +10,6 @@ router.get('/', function (req, res) {
 
 router.get('/users', migrate.getUsers)
 router.get('/trips', migrate.getTrips)
+router.get('/trips/:tripUrl/activities', migrate.getActivities)
 
 module.exports = router
