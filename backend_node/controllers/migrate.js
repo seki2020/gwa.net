@@ -23,6 +23,53 @@ function getUTCOffet(dateString, timeZone) {
   return d.offset
 }
 
+function getRandomID(length) {
+    var text = "";
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    for( var i=0; i < length; i++ )
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+
+    return text;
+}
+
+module.exports.getTrips = async function (req, res) {
+
+  const tripUrl = req.params.tripUrl
+  
+  // Async
+  try {
+    // Get remote data to migrate
+    const response = await got(remoteUrl + tripUrl, {json: true})
+    const result = response.body["response"]
+
+    migrateEvent(req, res, result["event"])
+  }
+  catch (error ) {
+    console.log(error)
+  }
+
+  res.send('Get and show the trips')
+}
+
+async function migrateEvent(req, res, event) {
+  console.log(`Migrate: ${event.url} `)
+
+  // Try to find in the datastore
+  var ref = db.collection('trips');
+  var query = ref.where('user.uid', '==', user.uid).where('url', '==', event.url).get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        // Add the event
+        addEvent(req, res, event)
+        
+      }
+    })
+    .catch(err => {
+      console.log('Error getting documents', err);
+    });
+}
+
 async function addEvent(req, res, event) {
   console.log(` - Add: ${event.url}`)
   // Build data structure to insert
@@ -55,115 +102,76 @@ async function addEvent(req, res, event) {
   // console.log(data)
 
   // Test calling a new URL
-  res.end()
-  try {
-    console.log("Move on to the activities")
+  // Don't start importing Activities automatically, First do all trips, then the activities
+  // res.end()
+  // try {
+  //   console.log("Move on to the activities")
 
-    const query = new URLSearchParams([['trip_id', 123], ['trip_name', event.name]]);
-    const response = await got("/migrate/trips/" + event.url + "/activities" , {baseUrl: serverUrl, json: true, query})
-  }
-  catch (error ) {
-    console.log(error)
-  }
+  //   const query = new URLSearchParams([['trip_id', 123], ['trip_name', event.name]]);
+  //   const response = await got("/migrate/trips/" + event.url + "/activities" , {baseUrl: serverUrl, json: true, query})
+  // }
+  // catch (error ) {
+  //   console.log(error)
+  // }
 
   // Add a new document with a generated id.
-  // db.collection('trips').add(data).then(ref => {
-  //   console.log('Added document with ID: ', ref.id);
+  db.collection('trips').add(data).then(ref => {
+    // Now add the TripUser
+    var data = {
+      role: 'owner',
+      user: user,
+      trip: {
+        uid: ref.id,
+        name: event.name
+      },
+      updated: Firestore.Timestamp.fromDate(new  Date(event.until.date + 'Z'))
+    }
 
-  //   // Now add the TripUser
-  //   var data = {
-  //     role: 'owner',
-  //     user: user,
-  //     trip: {
-  //       uid: ref.id,
-  //       name: event.name
-  //     },
-  //     updated: Firestore.Timestamp.fromDate(new  Date(event.until.date + 'Z'))
-  //   }
+    db.collection('trips-users').add(data).then(ref => {
+      console.log(" - added user info")
 
-  //   db.collection('trips-users').add(data).then(ref => {
-  //     console.log(" - added user info")
+    })  
 
-  //     // Go and get the activities for this trip
-
-  //   })  
-
-  // });
-}
-
-async function migrateEvent(req, res, event) {
-  console.log(`Migrate: ${event.url} `)
-
-  // Try to find in the datastore
-  var ref = db.collection('trips');
-  var query = ref.where('user.uid', '==', user.uid).where('url', '==', event.url).get()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        // Add the event
-        addEvent(req, res, event)
-        
-      }
-    })
-    .catch(err => {
-      console.log('Error getting documents', err);
-    });
-}
-
-async function addActivity(req, res, activity) {
-  console.log("   +++ Add")
-}
-
-async function migrateActivity(req, res, tripUrl, trip, activity) {
-  console.log("- Acivity")
-  console.log(trip)
-  console.log(activity)
-
-  // Try to find in the datastore
-  var ref = db.collection('trips-posts');
-  var query = ref.where('user.uid', '==', user.uid).where('trip.uid', '==', trip.uid).where('reference', '==', activity.reference).get()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        // Add the event
-        addActivity(req, res, activity)
-        
-      }
-    })
-
-}
-
-
-module.exports.getTrips = async function (req, res) {
-
-  const trip = "berlin2015"
-  
-  // Async
-  try {
-    // Get remote data to migrate
-    const response = await got(remoteUrl + trip, {json: true})
-    const result = response.body["response"]
-
-    migrateEvent(req, res, result["event"])
-  }
-  catch (error ) {
-    console.log(error)
-  }
-
-  res.send('Get and show the trips')
+  });
 }
 
 module.exports.getActivities = async function (req, res) {
 
   console.log("Go and get activities for the trip")
   console.log(req.params)
-  console.log(req.query)
+  // console.log(req.query)
 
-  const trip = {
-    uid: req.query.trip_id,
-    name: req.query.trip_name
-  }
   const tripUrl = req.params.tripUrl
 
-  // Async
+  // Try to find the trip, only if successfull we can continue in the datastore
+  var ref = db.collection('trips');
+  var query = ref.where('user.uid', '==', user.uid).where('url', '==', tripUrl).get()
+    .then(snapshot => {
+      if (!snapshot.empty) {
+        console.log("Got the trip")
+        let document = snapshot.docs[0]
+        let data = document.data()
+
+        const trip = {
+          uid: document.id,
+          name: data.name
+        }
+
+        fetchActivities(req, res, tripUrl, trip)
+
+      }
+    })
+    .catch(err => {
+      console.log('Error getting documents', err);
+    });
+
+  res.end()
+}
+
+async function fetchActivities(req, res, tripUrl, trip) {
+  console.log("Fetch activities")
+  console.log(trip)
+
   try {
     // Get remote data to migrate
     const response = await got(remoteUrl + tripUrl + '/activities?limit=2', {json: true})
@@ -180,8 +188,70 @@ module.exports.getActivities = async function (req, res) {
     console.log(error)
   }
 
-  res.end()
+
 }
+
+async function migrateActivity(req, res, tripUrl, trip, activity) {
+  console.log("- Activity")
+  // console.log(activity)
+
+  // Try to find in the datastore
+  var ref = db.collection('trips-posts');
+  var query = ref.where('user.uid', '==', user.uid).where('trip.uid', '==', trip.uid).where('reference', '==', activity.reference).get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        // Add the event
+        addActivity(req, res, trip, activity)
+        
+      }
+    })
+
+}
+
+async function addActivity(req, res, trip, activity) {
+  console.log("   +++ Add")
+  // console.log(activity)
+
+  data = {
+    message: activity.title,
+    created: Firestore.Timestamp.fromDate(new  Date(activity.date + 'Z')),
+    updated: Firestore.Timestamp.fromDate(new  Date(activity.date + 'Z')),
+    source: activity.source,
+    reference: activity.reference,
+    timeZoneOffet: activity.tz_offset,
+    place: {
+      name: activity.place,
+      location: new GeoPoint(activity.location.lat, activity.location.lon)
+    },
+    media: [],
+    trip: trip,
+    user: user
+  }
+  var media_list = []
+  for (i=0; i<activity.media.length; i++) {
+    m = activity.media[i]
+    var media = {
+      uid: getRandomID(12),
+      url: m.url,
+      contentType: m.content_type
+    }
+    media_list.push(media)
+    data.media.push({
+      uid: media.uid,
+      contentType: media.contentType
+    })
+  }
+
+  console.log(data)
+
+  // Add a new document with a generated id.
+  db.collection('trips-posts').add(data).then(ref => {
+    console.log("Added the Post, go and get/upload the media")
+
+  });
+
+}
+
 
 module.exports.getUsers = async function (req, res) {
   try {
