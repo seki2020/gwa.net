@@ -8,6 +8,12 @@ const db = new Firestore({
   keyFilename: '../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
 }); 
 
+const {Storage} = require('@google-cloud/storage');
+const storage = new Storage({
+  projectId: 'gwa-net',
+  keyFilename: '../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
+});  
+
 const user ={
   uid: "HVLCYVjM8Xd6bTvPohEky9NwgaF2",
   name: "Aad 't Hart"
@@ -247,6 +253,28 @@ async function addActivity(req, res, trip, activity) {
   // Add a new document with a generated id.
   db.collection('trips-posts').add(data).then(ref => {
     console.log("Added the Post, go and get/upload the media")
+
+    for (i=0; i<media_list.length; i++) {
+      const media = media_list[i]
+      // const bucketName = `gs://gwa-net.appspot.com/trips/${trip.uid}/images/${media.uid}.jpg`
+
+      const bucketName = 'gwa-net.appspot.com';
+      const filename = `trips/${trip.uid}/images/${media.uid}.jpg`
+      var f = storage
+        .bucket(bucketName)
+        .file(filename)
+    
+      const stream = f.createWriteStream({
+        metadata: {
+          contentType: media.contentType
+        },
+        resumable: false
+      });
+
+      // Get the image and send it to cloud storage
+      got.stream(media.url).pipe(stream);
+
+    }
 
   });
 
