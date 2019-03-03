@@ -15,7 +15,7 @@ const storage = new Storage({
 });  
 
 const user ={
-  uid: "HVLCYVjM8Xd6bTvPohEky9NwgaF2",
+  id: "HVLCYVjM8Xd6bTvPohEky9NwgaF2",
   name: "Aad 't Hart"
 }
 // const userId = "HVLCYVjM8Xd6bTvPohEky9NwgaF2"
@@ -36,7 +36,7 @@ function getUnixTimeStamp(date) {
 
 function getRandomID(length) {
     var text = "";
-    var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXUZ";
 
     for( var i=0; i < length; i++ )
         text += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -68,7 +68,7 @@ async function migrateEvent(req, res, event) {
 
   // Try to find in the datastore
   var ref = db.collection('trips');
-  var query = ref.where('user.uid', '==', user.uid).where('url', '==', event.url).get()
+  var query = ref.where('user.id', '==', user.id).where('url', '==', event.url).get()
     .then(snapshot => {
       if (snapshot.empty) {
         // Add the event
@@ -89,21 +89,23 @@ async function addEvent(req, res, event) {
     description: event.description,
     url: event.url,
     featured: true,
-    from: {
+    start: {
       date: Firestore.Timestamp.fromDate(new  Date(event.from.date + 'Z')),
       timeZone: event.from.tz,
       timeZoneOffet: getUTCOffet(event.from.date, event.from.tz),
       place: {
         name: event.from.place,
+        description: event.from.place,
         location: new GeoPoint(event.from.location.lat, event.from.location.lon)
       }
     },
-    until: {
+    end: {
       date: Firestore.Timestamp.fromDate(new  Date(event.until.date + 'Z')),
       timeZone: event.until.tz,
       timeZoneOffet: getUTCOffet(event.until.date, event.until.tz),
       place: {
         name: event.until.place,
+        description: event.until.place,
         location: new GeoPoint(event.until.location.lat, event.until.location.lon)
       }
     },
@@ -120,7 +122,7 @@ async function addEvent(req, res, event) {
       role: 'owner',
       user: user,
       trip: {
-        uid: ref.id,
+        id: ref.id,
         name: event.name
       },
       updated: Firestore.Timestamp.fromDate(new  Date(event.until.date + 'Z'))
@@ -144,14 +146,14 @@ module.exports.getActivities = async function (req, res) {
 
   // Try to find the trip, only if successfull we can continue in the datastore
   var ref = db.collection('trips');
-  var query = ref.where('user.uid', '==', user.uid).where('url', '==', tripUrl).get()
+  var query = ref.where('user.id', '==', user.id).where('url', '==', tripUrl).get()
     .then(snapshot => {
       if (!snapshot.empty) {
         let document = snapshot.docs[0]
         let data = document.data()
 
         const trip = {
-          uid: document.id,
+          id: document.id,
           name: data.name
         }
 
@@ -220,7 +222,7 @@ async function migrateActivity(tripUrl, trip, activity) {
 
   // Try to find in the datastore
   var ref = db.collection('trips-posts');
-  var query = ref.where('user.uid', '==', user.uid).where('trip.uid', '==', trip.uid).where('reference', '==', activity.reference).get()
+  var query = ref.where('user.ui', '==', user.id).where('trip.ui', '==', trip.id).where('reference', '==', activity.reference).get()
     .then(snapshot => {
       if (snapshot.empty) {
         // Add the event
@@ -244,6 +246,7 @@ async function addActivity(trip, activity) {
     timeZoneOffet: activity.tz_offset,
     place: {
       name: activity.place,
+      description: activity.place,
       location: new GeoPoint(activity.location.lat, activity.location.lon)
     },
     media: [],
@@ -254,14 +257,14 @@ async function addActivity(trip, activity) {
   for (i=0; i<activity.media.length; i++) {
     m = activity.media[i]
     var media = {
-      uid: getRandomID(12),
+      id: getRandomID(12),
       url: m.url,
       contentType: m.content_type == "image/jpg" ? "image/jpeg" : m.content_type
     }
     media_list.push(media)
     data.media.push({
-      uid: media.uid,
-      contentType: media.contentType
+      id: media.id,
+      type: media.contentType
     })
   }
 
@@ -274,7 +277,7 @@ async function addActivity(trip, activity) {
       // const bucketName = `gs://gwa-net.appspot.com/trips/${trip.uid}/images/${media.uid}.jpg`
 
       const bucketName = 'gwa-net.appspot.com';
-      const filename = `trips/${trip.uid}/images/${media.uid}.jpg`
+      const filename = `trips/${trip.id}/images/${media.id}.jpg`
       var f = storage
         .bucket(bucketName)
         .file(filename)
