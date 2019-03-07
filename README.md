@@ -1,2 +1,2 @@
-# gwa.net
-Just another Appengine experiment
+# Going Walkabout
+Backend services
