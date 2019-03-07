@@ -10,8 +10,11 @@
   "author": "aad@aadjemonkeyrock.com",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/firestore": "^1.0.1",
     "@google-cloud/storage": "^2.4.2",
     "express": "^4.16.4",
+    "got": "^9.6.0",
+    "luxon": "^1.11.1",
     "morgan": "^1.9.1"
   }
 }

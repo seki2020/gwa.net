@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const app = express();
 
 // Controllers
-const migrate = require('./controllers/migrate')
+const migrate = require('./routers/migrate')
 
 // Middle ware and routing
 app.use(morgan('combined'))
@@ -12,6 +12,35 @@ app.use('/migrate', migrate)
 app.get('/', (req, res) => {
   res.send('Hello from Aadje... Engine!');
 });
+
+app.get('/dates', (req, res) => {
+  const {DateTime} = require('luxon')
+  const {Interval} = require('luxon')
+
+  var ds = '2014-02-23T06:00:00'
+  var ts = 'Australia/Sydney'
+
+  var d_utc = DateTime.fromISO(ds, { zone: "UTC" }) 
+  var d_loc = DateTime.fromISO(ds, { zone: ts }) 
+
+  var i = Interval.fromDateTimes(d_loc, d_utc);
+
+  // console.log(d)
+  console.log(d_utc.zoneName)
+  console.log(d_utc.toString())
+  console.log(d_utc.offset)
+
+  console.log(d_loc.zoneName)
+  console.log(d_loc.toString())
+  console.log(d_loc.offset)
+  // console.log(d_loc.toJSDate())
+
+  var d = new Date(ds + 'Z')
+  console.log(d)
+
+  res.send('Hello date stuff');
+});
+
 
 app.get('/storage', (req, res) => {
   console.log("Checking out storage")
