@@ -16,9 +16,6 @@ exports.createTripPost = functions.firestore
       const updated = newValue.updated
       const tripId = newValue.trip.id
 
-      // perform desired operations ...
-      console.log(message)
-
       // Get the TripUser collection?
       const db = admin.firestore()
 
@@ -34,7 +31,6 @@ exports.createTripPost = functions.firestore
             console.log(doc.id, '=>', doc.data());
 
             let docRef = db.collection("trips-users").doc(doc.id)
-
             docRef.update({
               lastMessage: message,
               updated: updated
