@@ -2,7 +2,7 @@
   <div class="about">
     <h1>This is an about page</h1>
     <div class="test">
-      <p>Test stuff</p>
+      <p>Test stuff, really</p>
     </div>
   </div>
 </template>

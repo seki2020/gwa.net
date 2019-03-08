@@ -129,5 +129,6 @@ MANIFEST
 appengine-generated/
 
 # Project specific
+appengine/default/static/
 secrets/
 
