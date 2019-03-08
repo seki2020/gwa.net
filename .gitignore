@@ -116,6 +116,15 @@ MANIFEST
 .vscode/
 .settings/
 
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
 # Google App Engine generated folder
 appengine-generated/
 
