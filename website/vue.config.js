@@ -3,6 +3,6 @@ module.exports = {
   // options...
   // publicPath: '/static/',
   outputDir: '../appengine/default/static',
-  assetsDir: 'static/dist'
+  assetsDir: 'static'
   // indexPath: 'index/index.html'
 }
