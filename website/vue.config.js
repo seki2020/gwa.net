@@ -1,8 +1,11 @@
-// vue.config.js
 module.exports = {
-  // options...
-  // publicPath: '/static/',
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'scss',
+      patterns: []
+    }
+  },
+
   outputDir: '../appengine/default/static',
-  assetsDir: 'static'
-  // indexPath: 'index/index.html'
+  assetsDir: 'static',
 }

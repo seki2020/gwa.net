@@ -1,4 +1,4 @@
-# try-vue
+# website
 
 ## Project setup
 ```
