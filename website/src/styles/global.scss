@@ -2,17 +2,21 @@
 
 // Font awesome
 // Important to set the font path
-$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "~@fortawesome/fontawesome-free/scss/brands.scss";
-@import "~@fortawesome/fontawesome-free/scss/solid.scss";
-@import "~@fortawesome/fontawesome-free/scss/regular.scss";
+// $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+// @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+// @import "~@fortawesome/fontawesome-free/scss/brands.scss";
+// @import "~@fortawesome/fontawesome-free/scss/solid.scss";
+// @import "~@fortawesome/fontawesome-free/scss/regular.scss";
+// Importing as CSS moves them to a separate Vendor css
+@import "~@fortawesome/fontawesome-free/css/fontawesome.css";
+@import "~@fortawesome/fontawesome-free/css/brands.css";
+@import "~@fortawesome/fontawesome-free/css/solid.css";
+@import "~@fortawesome/fontawesome-free/css/regular.css";
 // Note: FA is about 54kb, could be optimized by using the Vue component and individual import of icons. For now not worth the effort
 // Test shows that for the 'footer' icons (4 brands, 2 regular) we need 37Kb of Javascript (versus 54Kb Css for all icons
 
 // Bulma configuration
-// Import a Google Font
-// This doesn't work here, instead imported in App.vue
+// Import a Google Font, This doesn't work here, instead imported in App.vue
 // @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
 // Update Bulma's global variables
@@ -38,6 +42,10 @@ $footer-background-color: lighten( $primary, 60% );
 //@import "~bulma/sass/layout/section.sass";
 //@import "~bulma/sass/grid/columns.sass";
 @import "~bulma/bulma";
+
+// Cookie Consent
+@import "~cookieconsent/build/cookieconsent.min.css";
+
 
 @import "footer.scss";
 @import "social-icons.scss";
