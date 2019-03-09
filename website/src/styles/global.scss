@@ -1,13 +1,11 @@
 // Bulma configuration
 // Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+// This doesn't work here, instead imported in App.vue
+// @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
 // Update Bulma's global variables
 $family-sans-serif: "Nunito", sans-serif;
 $primary: #00ACB8;
-//$link: $pink;
-//$widescreen-enabled: false;
-//$fullhd-enabled: false;
 
 // Update some of Bulma's component variables
 //$background: $white;
@@ -27,5 +25,6 @@ $footer-background-color: lighten( $primary, 60% );
 //@import "~bulma/sass/layout/hero.sass";
 //@import "~bulma/sass/layout/section.sass";
 //@import "~bulma/sass/grid/columns.sass";
-
 @import "~bulma/bulma";
+
+@import "footer.scss";

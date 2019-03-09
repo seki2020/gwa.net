@@ -1,8 +1,10 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from './app.vue'
 import router from './router'
+import { translate as _ } from './system/translator'
 
 Vue.config.productionTip = false
+Vue.prototype._ = _
 
 new Vue({
   router,
