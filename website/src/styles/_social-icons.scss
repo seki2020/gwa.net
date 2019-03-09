@@ -1,0 +1,23 @@
+$social-icon-color: $primary;
+
+.social-icons {
+  a.button {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    color: $social-icon-color;
+    border: 2px solid $social-icon-color;  // rgba(255,255,255,0.3);
+    background-color: transparent;
+    margin: 0 5px;
+    &:hover {
+      color: darken( $social-icon-color, 10% );
+      border-color: darken( $social-icon-color, 10% );
+    }
+  }
+
+  a {
+    margin: 0 5px;
+  }
+
+
+}

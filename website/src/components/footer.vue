@@ -27,6 +27,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'x-footer',
   computed: {
