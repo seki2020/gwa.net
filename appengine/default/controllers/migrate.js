@@ -5,18 +5,18 @@ const {GeoPoint} = require('@google-cloud/firestore');
 const {Firestore} = require('@google-cloud/firestore');  
 const db = new Firestore({
   projectId: 'gwa-net',
-  keyFilename: '../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
+  keyFilename: '../../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
 }); 
 
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage({
   projectId: 'gwa-net',
-  keyFilename: '../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
+  keyFilename: '../../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
 });  
 
 const user ={
   id: "HVLCYVjM8Xd6bTvPohEky9NwgaF2",
-  name: "Aad 't Hart"
+  name: "Aad"
 }
 // const userId = "HVLCYVjM8Xd6bTvPohEky9NwgaF2"
 const serverUrl = "http://localhost:8080"
@@ -30,7 +30,6 @@ function getUTCOffet(dateString, timeZone) {
 }
 
 function getUnixTimeStamp(date) {
-  var dd = date
   return Math.round(date.getTime() / 1000);
 }
 
@@ -295,23 +294,6 @@ async function addActivity(trip, activity) {
     }
 
   });
-
-}
-
-
-module.exports.getUsers = async function (req, res) {
-  try {
-    var users = await db.collection('users').get()
-    users.forEach((doc) => {
-      console.log(doc.id, '=>', doc.data());
-    });
-
-    // return users
-  }
-  catch (error) {
-    console.log(error)
-  }
-  res.send('Connected to Firestore')
 
 }
 

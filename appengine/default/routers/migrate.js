@@ -8,7 +8,6 @@ router.get('/', function (req, res) {
   res.send('Migrate home page')
 })
 
-router.get('/users', migrate.getUsers)
 router.get('/trips/:tripUrl', migrate.getTrips)
 router.get('/trips/:tripUrl/activities', migrate.getActivities)
 

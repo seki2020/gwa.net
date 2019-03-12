@@ -5,6 +5,7 @@ const app = express();
 
 // Routers
 const trips = require('./routers/trips')
+const migrate = require('./routers/migrate')
 
 // Locally serve static files
 app.use('/static', express.static('static/static'))
@@ -12,6 +13,8 @@ app.use(favicon(path.join(__dirname, '/static/favicon.ico')))
 
 // Set the routers
 app.use('/trips', trips)
+app.use('/migrate', migrate)
+
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/static/index.html'))

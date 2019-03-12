@@ -11,8 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/firestore": "^1.1.0",
     "@google-cloud/storage": "^2.4.2",
     "express": "^4.16.4",
+    "got": "^9.6.0",
+    "luxon": "^1.11.4",
     "serve-favicon": "^2.5.0"
   }
 }
