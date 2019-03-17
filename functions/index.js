@@ -36,11 +36,11 @@ exports.createTripPost = functions.firestore
 
             // Check for media in the post
             var newMedia = []
-            // if (media.length > 0) {
+            if (media !== undefined && media.length > 0) {
               for (var i=0; i<Math.min(4, media.length); i++) {
                 newMedia.push(media[i])
               }
-            // } 
+            } 
             console.log('New media: ', newMedia)
             const newLength = newMedia.length
             const recentLength = recentMedia.length
