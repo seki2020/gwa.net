@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/home.vue'
 import Privacy from './views/privacy'
+import Auth from './views/auth'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/privacy',
       name: 'privacy',
       component: Privacy
+    },
+    {
+      path: '/auth/action',
+      name: 'auth',
+      component: Auth
     },
     {
       path: '/about',
