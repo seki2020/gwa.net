@@ -22,6 +22,7 @@
 // Update Bulma's global variables
 $family-sans-serif: "Nunito", sans-serif;
 $primary: #00ACB8;
+$link: $primary;
 
 // Update some of Bulma's component variables
 //$background: $white;
@@ -46,6 +47,18 @@ $footer-background-color: lighten( $primary, 60% );
 // Cookie Consent
 @import "~cookieconsent/build/cookieconsent.min.css";
 
-
+@import "main.scss";
 @import "footer.scss";
 @import "social-icons.scss";
+@import "video.scss";
+
+@keyframes floating {
+  0%, 100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}

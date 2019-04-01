@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/home.vue'
 import Privacy from './views/privacy'
 import Auth from './views/auth'
+import GoingWalkabout from './views/goingwalkabout'
 
 Vue.use(Router)
 
@@ -11,19 +12,16 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
+      path: '/', name: 'home', component: Home
     },
     {
-      path: '/privacy',
-      name: 'privacy',
-      component: Privacy
+      path: '/goingwalkabout', name: 'goingwalkabout', component: GoingWalkabout
     },
     {
-      path: '/auth/action',
-      name: 'auth',
-      component: Auth
+      path: '/privacy', name: 'privacy', component: Privacy
+    },
+    {
+      path: '/auth/action', name: 'auth', component: Auth
     },
     {
       path: '/about',
