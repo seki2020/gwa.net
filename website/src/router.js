@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/home.vue'
+import Home from './views/home'
 import Privacy from './views/privacy'
 import Auth from './views/auth'
 import GoingWalkabout from './views/goingwalkabout'
