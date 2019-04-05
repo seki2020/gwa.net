@@ -48,6 +48,7 @@ $footer-background-color: lighten( $primary, 60% );
 @import "~cookieconsent/build/cookieconsent.min.css";
 
 @import "main.scss";
+@import "header.scss";
 @import "footer.scss";
 @import "social-icons.scss";
 @import "video.scss";

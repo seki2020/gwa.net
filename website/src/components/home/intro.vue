@@ -17,14 +17,3 @@ export default {
   name: 'intro'
 }
 </script>
-
-<style scoped>
-.header-image {
-    background-image: url("../../assets/header-small-compressed-bg.jpg");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-color: #999;
-}
-</style>
