@@ -3,7 +3,6 @@ import App from './app.vue'
 import router from './router'
 import { translate as _ } from './system/translator'
 
-// import { CookieConsent } from 'cookieconsent'
 import 'cookieconsent'
 
 Vue.config.productionTip = false
