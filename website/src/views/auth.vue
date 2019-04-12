@@ -128,17 +128,11 @@ export default {
       this.title = _('Email recovery')
       this.spinner = true
 
-      // var restoredEmail = null
       // Confirm the action code is valid.
       auth.checkActionCode(this.actionCode).then((info) => {
-        // Get the restored email address.
-        // restoredEmail = info['data']['email']
-
         // Revert to the old email.
         return auth.applyActionCode(this.actionCode)
       }).then(() => {
-        // Account email reverted to restoredEmail
-
         // TODO: Display a confirmation message to the user.
         this.success = _('Email is reverted to original email')
         this.spinner = false

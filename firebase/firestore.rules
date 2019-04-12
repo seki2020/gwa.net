@@ -8,5 +8,11 @@ service cloud.firestore {
     // match /{document=**} {
     //   allow read, write: if request.auth.uid != null;
     // }
+    // Users
+    match /users/{userId} {
+      allow read: if request.auth.uid == userId;
+      allow write: if request.auth.uid == userId;
+    }
+
   }
 }
