@@ -5,14 +5,24 @@ service cloud.firestore {
       allow read: if false;
       allow write: if false;
     }    
-    // match /{document=**} {
-    //   allow read, write: if request.auth.uid != null;
-    // }
+  
     // Users
     match /users/{userId} {
       allow read: if request.auth.uid == userId;
       allow write: if request.auth.uid == userId;
     }
+
+    // Trips
+    function matchUser(resource, request) {
+      return resource.data.user.id == request.resource.data.user.id
+    }
+
+    match /trips/{tripId} {
+      allow read: if request.auth.uid == resource.data.user.id;
+      allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request)
+      allow create: if request.auth.uid == request.resource.data.user.id;
+    }
+
 
   }
 }

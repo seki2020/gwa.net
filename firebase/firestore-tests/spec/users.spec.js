@@ -46,14 +46,19 @@ describe('Authorized user', () => {
     await teardown()
   });
 
-  test('Deny access random user', async () => {
+  test('Deny getting random user', async () => {
     await expect(db.doc('users/other').get()).toDeny();
-    await expect(db.doc('users/other').set({})).toDeny();
+  })
+  test('Deny update random user', async () => {
+    await expect(db.doc('users/other').update({name: 'name'})).toDeny();
   })
 
   test('Allow access own user', async () => {
     await expect(db.doc('users/me').get()).toAllow();
-    await expect(db.doc('users/me').set({})).toAllow();
   })
+  test('Allow update own user', async () => {
+    await expect(db.doc('users/me').update({name: 'update'})).toAllow();
+  })
+
 })
 
