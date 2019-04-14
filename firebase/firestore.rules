@@ -23,6 +23,9 @@ service cloud.firestore {
     function existTrip(tripId) {
       return exists(/databases/$(database)/documents/trips/$(tripId))
     }
+    function getTripData(tripId) {
+      return get(/databases/$(database)/documents/trips/$(tripId)).data
+    }
 
     // Trips
     match /trips/{tripId} {
@@ -42,6 +45,14 @@ service cloud.firestore {
     }
 
     // Trips Posts
-    
+    match /trips-posts/{tripPostId} {
+      // Only read trips-posts you owns
+      allow read: if request.auth.uid == resource.data.user.id;
+      // Only update trips-posts you own, but can't update trip or user
+      allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request) && matchTrip(resource, request)
+      // Only allow to create trips-posts for trip you own
+      allow create: if request.auth.uid == request.resource.data.user.id  && getTripData(request.resource.data.trip.id).user.id == request.auth.uid;
+    }
+
   }
 }
