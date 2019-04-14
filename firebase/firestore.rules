@@ -12,17 +12,36 @@ service cloud.firestore {
       allow write: if request.auth.uid == userId;
     }
 
-    // Trips
+    // Helper functions
     function matchUser(resource, request) {
       return resource.data.user.id == request.resource.data.user.id
     }
+    function matchTrip(resource, request) {
+      return resource.data.trip.id == request.resource.data.trip.id
+    }
 
+    function existTrip(tripId) {
+      return exists(/databases/$(database)/documents/trips/$(tripId))
+    }
+
+    // Trips
     match /trips/{tripId} {
       allow read: if request.auth.uid == resource.data.user.id;
       allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request)
       allow create: if request.auth.uid == request.resource.data.user.id;
     }
 
+    // Trips Users
+    match /trips-users/{tripUserId} {
+      // Only read trips-users you owns
+      allow read: if request.auth.uid == resource.data.user.id;
+      // Only update trips-users you own, but can't update trip or user
+      allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request) && matchTrip(resource, request)
+      // Only allow to create trips-users for yourself
+      allow create: if request.auth.uid == request.resource.data.user.id  && existTrip(request.resource.data.trip.id);
+    }
 
+    // Trips Posts
+    
   }
 }
