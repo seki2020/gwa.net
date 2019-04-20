@@ -7,7 +7,7 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 const Constants = require('../constants')
 
 
-function updateUserTripCount(action, oldDocument, newDocument) {
+function updateUserTripCount(action, userId, oldDocument, newDocument) {
   // Keep a count of public trips in the user (owner)
   var inc = 0
   if (action === 'create' && newDocument.privacy === Constants.privacy.public) {
@@ -27,7 +27,7 @@ function updateUserTripCount(action, oldDocument, newDocument) {
   }
   if (inc) {
     const db = admin.firestore()
-    const userRef = db.collection("users").doc(newDocument.user.id);
+    const userRef = db.collection("users").doc(userId);
     userRef.update({
       trips: FieldValue.increment(inc)
     });
@@ -41,13 +41,16 @@ exports = module.exports = functions.firestore
       const oldDocument = change.before.exists ? change.before.data(): null
       const newDocument = change.after.exists ? change.after.data() : null
 
-      const action = oldDocument === undefined ? 'create': newDocument === null ? 'delete': 'update'
+      const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
       console.log('Action: ', action)
       console.log('Old: ', oldDocument)
       console.log('New: ', newDocument)
 
+      const userId = oldDocument ? oldDocument.user.id : newDocument.user.id
+
+
       // Keep a count of public trips in the user (owner)
-      updateUserTripCount(action, oldDocument, newDocument)
+      updateUserTripCount(action, userId, oldDocument, newDocument)
 
       // Deal with name changes of the trip, but only for update
       if (action === 'update' && oldDocument.name !== newDocument.name) {
