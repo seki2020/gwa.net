@@ -50,16 +50,6 @@ exports = module.exports = functions.firestore
       // 4. When Trip is set to private, remove all Followers
 
       const db = admin.firestore()
-      // var batch = db.batch();
-      // snapshot.forEach(doc => {
-      //     // For each doc, add a delete operation to the batch
-      //     batch.update(doc.ref, recentData);
-      // });
-
-      // // Commit the batch
-
-      // return batch.commit();
-
 
       // Keep a count of public trips in the user (owner)
       var inc = updateUserTripCount(action, userId, oldDocument, newDocument)

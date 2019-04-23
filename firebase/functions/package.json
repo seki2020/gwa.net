@@ -16,8 +16,8 @@
     "glob": "^7.1.3"
   },
   "devDependencies": {
-    "eslint": "^5.12.0",
-    "eslint-plugin-promise": "^4.0.1"
+    "eslint": "^5.16.0",
+    "eslint-plugin-promise": "^4.1.1"
   },
   "engines": {
     "node": "8"

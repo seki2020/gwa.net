@@ -66,7 +66,7 @@ exports = module.exports = functions.firestore
             recentData.recent.media = tmpMedia
 
             // Remove the message
-            if (oldDocument.message === recent.message) {
+            if (oldDocument.message === recentData.recent.message) {
               recentData.recent.message = ""
             }
           }
@@ -103,7 +103,7 @@ exports = module.exports = functions.firestore
         }
         return true
       })
-      .then(ref => {
+      .then(() => {
         console.log('Done update of the Trip, continue with Trip Users')
 
         // Batch update the TripUsers
@@ -122,7 +122,7 @@ exports = module.exports = functions.firestore
         // Commit the batch
         return batch.commit();
       })
-      .then(ref => {
+      .then(() => {
         console.log('Done with the tripUsers')
 
         // in case of a delete, remove the media from storage
