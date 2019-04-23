@@ -1,7 +1,10 @@
+'use strict'
 const functions = require('firebase-functions');
 const admin = require('firebase-admin')
 // eslint-disable-next-line no-empty
 try {admin.initializeApp(functions.config().firebase);} catch(e) {} // You do that because the admin SDK can only be initialized once.
+
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 exports = module.exports = functions.firestore
   .document('trips-posts/{id}')
@@ -12,10 +15,17 @@ exports = module.exports = functions.firestore
 
     const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
     console.log('Action: ', action)
-    console.log('Old: ', oldDocument)
-    console.log('New: ', newDocument)
+    // console.log('Old: ', oldDocument)
+    // console.log('New: ', newDocument)
   
     const tripId = oldDocument ? oldDocument.trip.id : newDocument.trip.id
+
+    // Rules
+    // 1. Keep recent message and media in Trip and TripUser
+    var recentData = {}
+    // 2. Keep number of posts in Trip
+    var postIncrement = action === 'create' ? 1 : action === 'delete' ? -1 : 0
+    // 3. In case of delete, delete the media in storage
 
     // Fetch the matching Trip
     const db = admin.firestore()
@@ -24,34 +34,40 @@ exports = module.exports = functions.firestore
       .then(doc => {
         if (doc.exists) {
           const tripData = doc.data()
-          var updated = tripData.updated
           const recent = tripData.recent
-          var recentMessage = recent !== undefined ? (recent.messsage !== undefined ? recent.message : "") : ""
-          var recentUser = recent !== undefined ? (recent.user !== undefined ? recent.user : null) : null
-          var recentMedia = recent !== undefined ? (recent.media !== undefined ? recent.media : []) : []
+
+          // 0. Current recent data
+          recentData = {
+            recent: {
+              message: recent && recent.message ? recent.message : "",
+              user: recent && recent.user ? recent.user : tripData.user,
+              media: recent && recent.media ? recent.media : []
+            },
+            updated: tripData.updated
+          }            
           var tmpMedia = []
-          
+
           // 1. Process the 'old' document (for update and delete)
           if (oldDocument) {
             // Remove the old media from the recent media
             const oldMedia = oldDocument.media
-            for (var i=0; i<recentMedia.length; i++) {
+            for (var i=0; i<recentData.recent.media.length; i++) {
               // Remove any matching media from the recentMedia
               var found = false
               for (var j=0; j<oldMedia.length; j++) {
-                if (recentMedia[i].id === oldMedia[j].id) {
+                if (recentData.recent.media[i].id === oldMedia[j].id) {
                   found = true
                 }
               }
               if (!found) {
-                tmpMedia.push(recentMedia[i])
+                tmpMedia.push(recentData.recent.media[i])
               }
             } 
-            recentMedia = tmpMedia
+            recentData.recent.media = tmpMedia
 
             // Remove the message
             if (oldDocument.message === recent.message) {
-              recentMessage = ""
+              recentData.recent.message = ""
             }
           }
 
@@ -64,41 +80,66 @@ exports = module.exports = functions.firestore
                 newMedia.push(media[k])
               }
             } 
-            const count = Math.min((4 - newMedia.length), recentMedia.length)
-
+            const count = Math.min((4 - newMedia.length), recentData.recent.media.length)
             for (var l=0; l<count; l++) {
-              newMedia.push(recentMedia[l])
+              newMedia.push(recentData.recent.media[l])
             }
-            console.log('New media: ', newMedia)
 
             // Set the New values
-            recentMessage = newDocument.message
-            recentUser = newDocument.user
-            recentMedia = newMedia
-            updated = newDocument.updated
+            recentData.recent.message = newDocument.message
+            recentData.recent.user = newDocument.user
+            recentData.recent.media = newMedia
+            recentData.updated = newDocument.updated
           }
 
           // 3. Update the Trip
-          return tripRef.update({
-            recent: {
-              message: recentMessage,
-              user: recentUser,
-              media: recentMedia
-            },
-            updated: updated
-          })
-          // .then(ref => {
-          //   return true
-          // }).catch(err => {
-          //   console.log('Error getting document', err);
-          // })          
-
+          var data = {
+            recent: recentData.recent,
+            updated: recentData.updated,
+            posts: FieldValue.increment(postIncrement)
+          }
+          return tripRef.update(data)
 
         }
         return true
       })
       .then(ref => {
-        console.log('Done with the update of the Trip')
+        console.log('Done update of the Trip, continue with Trip Users')
+
+        // Batch update the TripUsers
+        return db.collection('trips-users').where('trip.id', '==', tripId).get()
+      })
+      .then(snapshot => {
+        console.log('Got Trip Users results')
+
+        // Once we get the results, begin a batch
+        var batch = db.batch();
+        snapshot.forEach(doc => {
+            // For each doc, add a delete operation to the batch
+            batch.update(doc.ref, recentData);
+        });
+
+        // Commit the batch
+        return batch.commit();
+      })
+      .then(ref => {
+        console.log('Done with the tripUsers')
+
+        // in case of a delete, remove the media from storage
+        if (action === 'delete') {
+          console.log('Do media delete')
+          const storage = admin.storage()
+          for (i=0; i<oldDocument.media.length; i++) {
+            let media = oldDocument.media[i]
+            
+            const bucketName = 'gwa-net.appspot.com';
+            const filename = `trips/${tripId}/images/${media.id}.jpg`
+
+            console.log(`   + media: ${filename}`)
+
+            storage.bucket(bucketName).file(filename).delete()
+          }
+        }
         return true
       })
       .catch(err => {
@@ -107,64 +148,4 @@ exports = module.exports = functions.firestore
 
     return true
 
-    // // 1. If there is an old document (update or delete), clean-up the 'resent'
-    // if (oldDocument) {
-    //   console.log('- Clean up old document stuff')
-    // }
-
-
-    // if (action === 'create') {
-    //   // Get the parent Trip
-    //   const db = admin.firestore()
-    //   const tripRef = db.collection("trips").doc(newDocument.trip.id);
-    //   tripRef.get()
-    //     .then(doc => {
-    //       if (doc.exists) {
-    //         console.log('Trip data:', doc.data());
-
-    //         const tripData = doc.data()
-    //         const recent = tripData.recent
-    //         const recentMedia = recent !== undefined ? (recent.media !== undefined ? recent.media : []) : []
-
-    //         console.log('Recent media: ', recentMedia)
-
-    //         // Check for media in the post
-    //         var newMedia = []
-    //         const media = newDocument.media
-    //         if (media !== undefined && media.length > 0) {
-    //           for (var i=0; i<Math.min(4, media.length); i++) {
-    //             newMedia.push(media[i])
-    //           }
-    //         } 
-    //         // console.log('New media: ', newMedia)
-    //         // const newLength = newMedia.length
-    //         // const recentLength = recentMedia.length
-    //         const count = Math.min((4 - newMedia.length), recentMedia.length)
-    //         // console.log('length: ', newLength, ', ', recentLength, 'count ', count)
-
-    //         for (var j=0; j<count; j++) {
-    //           newMedia.push(recentMedia[j])
-    //         }
-    //         console.log('New media: ', newMedia)
-
-    //         // let docRef = db.collection("trips-users").doc(doc.id)
-    //         return tripRef.update({
-    //           recent: {
-    //             message: newDocument.message,
-    //             user: newDocument.user,
-    //             media: newMedia
-    //           },
-    //           updated: newDocument.updated
-    //         })
-
-    //       }
-    //       return true
-    //     })
-    //     .catch(err => {
-    //       console.log('Error getting document', err);
-    //     });
-
-    //   return true
-    // }
-    // return true
   })  
