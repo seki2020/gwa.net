@@ -54,9 +54,11 @@ exports = module.exports = functions.firestore
             for (var i=0; i<recentData.recent.media.length; i++) {
               // Remove any matching media from the recentMedia
               var found = false
-              for (var j=0; j<oldMedia.length; j++) {
-                if (recentData.recent.media[i].id === oldMedia[j].id) {
-                  found = true
+              if (oldMedia !== undefined) {
+                for (var j=0; j<oldMedia.length; j++) {
+                  if (recentData.recent.media[i].id === oldMedia[j].id) {
+                    found = true
+                  }
                 }
               }
               if (!found) {

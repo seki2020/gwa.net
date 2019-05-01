@@ -1,5 +1,5 @@
 const express = require('express');
-const morgan = require('morgan')
+// const morgan = require('morgan')
 const favicon = require('serve-favicon')
 const path = require('path')
 const app = express();
@@ -17,7 +17,7 @@ const api = require('./routers/api')
 const migrate = require('./routers/migrate')
 
 // Middle ware 
-app.use(morgan('combined'))
+// app.use(morgan('combined'))
 
 // Locally serve static files
 app.use('/static', express.static('static/static'))
@@ -35,5 +35,5 @@ app.get('/', (req, res) => {
 // Listen to the App Engine-specified port, or 8080 otherwise
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}...`);
+  // console.log(`Server listening on port ${PORT}...`);
 });

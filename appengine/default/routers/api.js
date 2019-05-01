@@ -4,6 +4,10 @@ const router = express.Router()
 
 const trips = require('../controllers/trips/trips')
 const tripsMedia = require('../controllers/trips/media')
+const places = require('../controllers/places/places')
+
+// Test, later to the bottom
+router.get('/places/nearby', places.nearBy)
 
 router.use((req, res, next) => {
   // Get Auth Header value

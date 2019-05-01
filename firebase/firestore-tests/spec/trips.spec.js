@@ -14,6 +14,12 @@ const mockData = {
     user: {
       id: 'me'
     }
+  },
+  'trips/five': {
+    user: {
+      id: 'me'
+    },
+    privacy: 2
   }
 };
 
@@ -53,6 +59,10 @@ describe('Authorized user', () => {
   test('Deny access random trip', async () => {
     await expect(db.doc('trips/one').get()).toDeny();
   })
+  test('Allow access public trip from someone else', async () => {
+    await expect(db.doc('trips/five').get()).toAllow();
+  })
+
   test('Deny update random trip', async () => {
     await expect(db.doc('trips/one').update({name: 'new'})).toDeny();
   })
