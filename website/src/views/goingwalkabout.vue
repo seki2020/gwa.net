@@ -12,7 +12,7 @@
             </div>
             <div class="card-image">
               <div class="video-responsive">
-                <iframe width="560" height="315" :src="'https://www.youtube.com/embed/' + column.content.key" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" :src="'https://www.youtube-nocookie.com/embed/' + column.content.key" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             </div>
           </div>

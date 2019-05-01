@@ -6,17 +6,16 @@
   "scripts": {
     "serve": "nodemon app.js",
     "start": "node app.js",
+    "deploy": "gcloud app deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/firestore": "^1.1.0",
-    "@google-cloud/storage": "^2.4.2",
     "express": "^4.16.4",
-    "firebase-admin": "^7.0.0",
+    "firebase-admin": "^7.3.0",
     "got": "^9.6.0",
-    "luxon": "^1.11.4",
+    "luxon": "^1.12.1",
     "morgan": "^1.9.1",
     "serve-favicon": "^2.5.0"
   }

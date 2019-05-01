@@ -4,8 +4,10 @@ import router from './router'
 import { translate as _ } from './system/translator'
 
 import 'cookieconsent'
+import Formatting from './system/formatting'
 
 Vue.config.productionTip = false
+Vue.use(Formatting)
 Vue.prototype._ = _
 
 new Vue({

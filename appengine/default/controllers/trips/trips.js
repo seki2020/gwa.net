@@ -50,21 +50,23 @@ module.exports.tripDelete = async function (req, res) {
                   let post = doc.data()
 
                   // Remove the stored media
-                  for (i=0; i<post.media.length; i++) {
-                    let media = post.media[i]
-                    
-                    const bucketName = 'gwa-net.appspot.com';
-                    const filename = `trips/${tripId}/images/${media.id}.jpg`
-
-                    console.log(`   + media: ${filename}`)
-
-                    var f = storage.bucket(bucketName).file(filename)
-                    f.delete().then(() => {
-                      console.log("     -- Deleted")
-                    }).catch(error => {
-                      console.log(`     -- Error: ${error}`)
-                    })
-
+                  if (post.media) {
+                    for (i=0; i<post.media.length; i++) {
+                      let media = post.media[i]
+                      
+                      const bucketName = 'gwa-net.appspot.com';
+                      const filename = `trips/${tripId}/images/${media.id}.jpg`
+  
+                      console.log(`   + media: ${filename}`)
+  
+                      var f = storage.bucket(bucketName).file(filename)
+                      f.delete().then(() => {
+                        console.log("     -- Deleted")
+                      }).catch(error => {
+                        console.log(`     -- Error: ${error}`)
+                      })
+  
+                    }
                   }
 
                   // Remove the post
