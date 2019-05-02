@@ -14,10 +14,16 @@ const storage = new Storage({
   keyFilename: '../../secrets/gwa-net-13e914d23139.json'     // TODO: In production this probably doesn't work. ../secrets is outside scope of app.yaml and won't get uploaded
 });  
 
-const user ={
-  id: "HVLCYVjM8Xd6bTvPohEky9NwgaF2",
-  name: "Aad"
+// const user = {
+//   id: "HVLCYVjM8Xd6bTvPohEky9NwgaF2",
+//   name: "Aad"
+// }
+// Demo
+const user = {
+  id: "Mw9os612DzNrX0zn0NlTUmMbhf92",
+  name: "Demo"
 }
+
 // const userId = "HVLCYVjM8Xd6bTvPohEky9NwgaF2"
 const serverUrl = "http://localhost:8080"
 const remoteUrl = 'http://www.goingwalkabout.net/export/events/' 
@@ -87,7 +93,9 @@ async function addEvent(req, res, event) {
     name: event.name,
     description: event.description,
     url: event.url,
-    featured: true,
+    featured: false,
+    privacy: 0,
+    followers: 0,
     start: {
       date: Firestore.Timestamp.fromDate(new  Date(event.from.date + 'Z')),
       timeZone: event.from.tz,
@@ -127,9 +135,10 @@ async function addEvent(req, res, event) {
       updated: Firestore.Timestamp.fromDate(new  Date(event.until.date + 'Z'))
     }
 
-    db.collection('trips-users').add(data).then(ref => {
+    // Make ID for the TripUser
+    var uid = ref.id + '_' + user.id
+    db.collection('trips-users').doc(uid).set(data).then(ref => {
       console.log(" - added user info")
-
     })  
 
   });
@@ -141,7 +150,7 @@ module.exports.getActivities = async function (req, res) {
   // console.log(req.query)
 
   const tripUrl = req.params.tripUrl
-  const before = req.query.before
+  const after = req.query.after
 
   // Try to find the trip, only if successfull we can continue in the datastore
   var ref = db.collection('trips');
@@ -156,7 +165,7 @@ module.exports.getActivities = async function (req, res) {
           name: data.name
         }
 
-        fetchActivities(tripUrl, trip, before)
+        fetchActivities(tripUrl, trip, after)
       }
     })
     .catch(err => {
@@ -166,16 +175,16 @@ module.exports.getActivities = async function (req, res) {
   res.end()
 }
 
-async function fetchActivities(tripUrl, trip, before) {
+async function fetchActivities(tripUrl, trip, after) {
   console.log(" - Fetch activities")
 
-  const limit = 3
+  const limit = 1
 
   try {
     // Get remote data to migrate
     var rUrl = `${remoteUrl}${tripUrl}/activities?limit=${limit}`
-    if (before) {
-      rUrl += `&before=${before}`
+    if (after) {
+      rUrl += `&after=${after}`
     }
     console.log(`   + ${rUrl}`)
 
@@ -199,7 +208,7 @@ async function fetchActivities(tripUrl, trip, before) {
     if(activities.length == limit) {
       // Move on to the next batch
       var ts = getUnixTimeStamp(d)
-      var sUrl = `${serverUrl}/migrate/trips/${tripUrl}/activities?before=${ts}`
+      var sUrl = `${serverUrl}/migrate/trips/${tripUrl}/activities?after=${ts}`
   
       // Next Batch
       try {
@@ -220,8 +229,9 @@ async function migrateActivity(tripUrl, trip, activity) {
   // console.log("- Activity")
 
   // Try to find in the datastore
-  var ref = db.collection('trips-posts');
-  var query = ref.where('user.ui', '==', user.id).where('trip.ui', '==', trip.id).where('reference', '==', activity.reference).get()
+  // var ref = db.collection('trips-posts');
+  var ref = db.collection('trips').doc(trip.id).collection('posts');
+  var query = ref.where('reference', '==', activity.reference).get()
     .then(snapshot => {
       if (snapshot.empty) {
         // Add the event
@@ -243,13 +253,15 @@ async function addActivity(trip, activity) {
     source: activity.source,
     reference: activity.reference,
     timeZoneOffet: activity.tz_offset,
+    timeZone: activity.tz_name,
     place: {
       name: activity.place,
       description: activity.place,
-      location: new GeoPoint(activity.location.lat, activity.location.lon)
+      location: new GeoPoint(activity.location.lat, activity.location.lon),
+      country: activity.country
     },
     media: [],
-    trip: trip,
+    // trip: trip,
     user: user
   }
   var media_list = []
@@ -258,17 +270,20 @@ async function addActivity(trip, activity) {
     var media = {
       id: getRandomID(12),
       url: m.url,
+      aspectRatio: m.width / m.height,
       contentType: m.content_type == "image/jpg" ? "image/jpeg" : m.content_type
     }
     media_list.push(media)
     data.media.push({
       id: media.id,
-      type: media.contentType
+      aspectRatio: media.aspectRatio,
+      contentType: media.contentType
     })
   }
 
   // Add a new document with a generated id.
-  db.collection('trips-posts').add(data).then(ref => {
+  db.collection('trips').doc(trip.id).collection('posts').add(data).then(ref => {
+  // db.collection('trips-posts').add(data).then(ref => {
     // console.log("Added the Post, go and get/upload the media")
 
     for (i=0; i<media_list.length; i++) {
