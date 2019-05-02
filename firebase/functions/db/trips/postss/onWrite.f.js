@@ -99,7 +99,7 @@ exports = module.exports = functions.firestore
           const tripData = doc.data()
 
           // Update the 'recent' data
-          const recentData = updateRecentData(tripData, oldDocument, newDocument)
+          recentData = updateRecentData(tripData, oldDocument, newDocument)
 
           // const recent = tripData.recent
 

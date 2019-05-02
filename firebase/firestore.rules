@@ -32,7 +32,15 @@ service cloud.firestore {
       allow read: if request.auth.uid == resource.data.user.id || resource.data.privacy == 2; 
       allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request)
       allow create: if request.auth.uid == request.resource.data.user.id;
+
+      match /posts/{postId} {
+        allow read: if resource.data.user.id == request.auth.uid 
+        allow update: if request.auth.uid == resource.data.user.id 
+        allow create: if request.auth.uid == request.resource.data.user.id;
+      }
+
     }
+
 
     // Trips Users
     match /trips-users/{tripUserId} {

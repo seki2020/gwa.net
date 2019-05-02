@@ -261,7 +261,7 @@ async function addActivity(trip, activity) {
       country: activity.country
     },
     media: [],
-    // trip: trip,
+    trip: trip,
     user: user
   }
   var media_list = []
