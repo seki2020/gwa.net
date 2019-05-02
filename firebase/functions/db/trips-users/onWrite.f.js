@@ -9,10 +9,10 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 function updateTripFollowerCount(action, oldDocument, newDocument) {
   // Keep a count of public trips in the user (owner)
   var inc = 0
-  if (action === 'create' && newDocument.rule !== 'owner') {
+  if (action === 'create' && newDocument.role !== 'owner') {
     inc = 1
   }
-  else if (action === 'delete' && oldDocument.rule !== 'owner') {
+  else if (action === 'delete' && oldDocument.role !== 'owner') {
     inc = -1
   }
   return inc

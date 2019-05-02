@@ -131,8 +131,8 @@ exports = module.exports = functions.firestore
         if (action === 'delete') {
           console.log('Do media delete')
           const storage = admin.storage()
-          for (i=0; i<oldDocument.media.length; i++) {
-            let media = oldDocument.media[i]
+          for (var j=0; j<oldDocument.media.length; j++) {
+            let media = oldDocument.media[j]
             
             const bucketName = 'gwa-net.appspot.com';
             const filename = `trips/${tripId}/images/${media.id}.jpg`

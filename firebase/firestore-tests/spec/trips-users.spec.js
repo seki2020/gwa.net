@@ -100,5 +100,14 @@ describe('Authorized user', () => {
     await expect(db.doc('trips-users/rst3').set({role: 'follower', user: {id: 'me'}, trip: {id: 'one'}})).toAllow();
   })
 
+  test('Deny delete trip user of someone else', async () => {
+    await expect(db.doc('trips-users/xyz').delete()).toDeny();
+  })
+
+  test('Allow delete trip user of yourself', async () => {
+    await expect(db.doc('trips-users/abc').delete()).toAllow();
+  })
+
+
 })
 

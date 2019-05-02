@@ -42,6 +42,8 @@ service cloud.firestore {
       allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request) && matchTrip(resource, request)
       // Only allow to create trips-users for yourself
       allow create: if request.auth.uid == request.resource.data.user.id  && existTrip(request.resource.data.trip.id);
+      // Only allow deletion of your own records
+      allow delete: if resource.data.user.id == request.auth.uid
     }
 
     // Trips Posts
