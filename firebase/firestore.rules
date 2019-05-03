@@ -34,13 +34,12 @@ service cloud.firestore {
       allow create: if request.auth.uid == request.resource.data.user.id;
 
       match /posts/{postId} {
-        allow read: if resource.data.user.id == request.auth.uid 
+        allow read: if true
         allow update: if request.auth.uid == resource.data.user.id 
         allow create: if request.auth.uid == request.resource.data.user.id;
       }
 
     }
-
 
     // Trips Users
     match /trips-users/{tripUserId} {
@@ -51,18 +50,6 @@ service cloud.firestore {
       // Only allow to create trips-users for yourself
       allow create: if request.auth.uid == request.resource.data.user.id  && existTrip(request.resource.data.trip.id);
       // Only allow deletion of your own records
-      allow delete: if resource.data.user.id == request.auth.uid
-    }
-
-    // Trips Posts
-    match /trips-posts/{tripPostId} {
-      // Only read trips-posts you owns
-      allow read: if request.auth.uid == resource.data.user.id;
-      // Only update trips-posts you own, but can't update trip or user
-      allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request) && matchTrip(resource, request)
-      // Only allow to create trips-posts for trip you own
-      allow create: if request.auth.uid == request.resource.data.user.id  && getTripData(request.resource.data.trip.id).user.id == request.auth.uid;
-      // Only allow to delete trips-posts you created
       allow delete: if resource.data.user.id == request.auth.uid
     }
 

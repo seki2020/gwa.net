@@ -37,34 +37,6 @@
       ]
     },
     {
-      "collectionGroup": "trips-posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "trip.id",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "updated",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trips-posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "user.id",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "updated",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "trips-users",
       "queryScope": "COLLECTION",
       "fields": [
