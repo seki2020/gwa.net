@@ -43,6 +43,10 @@ describe('Not Authorized user', () => {
     await expect(db.collection('trips').add({})).toDeny();
     await expect(db.doc('trips/three').set({user: {id: 'me'}})).toDeny();
   })
+
+  test('Deny deleting a trip', async () => {
+    await expect(db.doc('trips/one').delete()).toDeny();
+  })
 })
 
 describe('Authorized user', () => {
