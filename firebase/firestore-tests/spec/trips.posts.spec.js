@@ -97,10 +97,14 @@ describe('Authorized user', () => {
     await expect(db.doc('trips/other/posts/other').delete()).toDeny();
   })
 
-  // // For Owned trip
+  // For Owned trip
   test('Allow getting post of own trip', async () => {
     await expect(db.doc('trips/me/posts/me').get()).toAllow();
   })
+  test('Allow getting posts of own trip', async () => {
+    await expect(db.collection('trips/me/posts').get()).toAllow();
+  })
+
   test('Allow update of post of own trip', async () => {
     await expect(db.doc('trips/me/posts/me').update({message: 'Hello'})).toAllow();
   })
@@ -120,6 +124,9 @@ describe('Authorized user', () => {
   // Public trip
   test('Allow getting post of public not own trip', async () => {
     await expect(db.doc('trips/public/posts/other').get()).toAllow();
+  })
+  test('Allow getting posts of public not own trip', async () => {
+    await expect(db.collection('trips/public/posts').get()).toAllow();
   })
   test('Deny create of post of public not own trip', async () => {
     await expect(db.collection('trips/public/posts').add({message: 'Hellow', trip: {id: 'public'}, user: {id: 'me'}})).toDeny();
