@@ -49,11 +49,12 @@ service cloud.firestore {
     }
 
     // Trips Users
+    
     match /trips-users/{tripUserId} {
-      // Only read trips-users you owns
-      allow read: if request.auth.uid == resource.data.user.id 
+      // Only read trips-users you owns or are trip owner
+      allow read: if resource.data.user.id == request.auth.uid || isTripOwner(resource.data.trip.id)
       // Only update trips-users you own, but can't update trip or user
-      allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request) && matchTrip(resource, request)
+      allow update: if resource.data.user.id == request.auth.uid && matchUser(resource, request) && matchTrip(resource, request)
       // Only allow to create trips-users for yourself
       allow create: if request.auth.uid == request.resource.data.user.id  && existTrip(request.resource.data.trip.id);
       // Only allow deletion of your own records
