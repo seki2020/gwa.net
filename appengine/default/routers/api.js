@@ -2,6 +2,8 @@ const express = require('express')
 const admin = require('firebase-admin')
 const router = express.Router()
 
+const usersMedia = require('../controllers/users/media')
+
 const trips = require('../controllers/trips/trips')
 const tripsMedia = require('../controllers/trips/media')
 const places = require('../controllers/places/places')
@@ -32,7 +34,10 @@ router.use((req, res, next) => {
   }
 })
 
-// Set the normal routs
+// Users
+router.get('/users/:imageId.jpg', usersMedia.getImage)
+
+// Trips
 router.get('/trips/:tripId/images/:imageId.jpg', tripsMedia.getImage)
 router.delete('/trips/:tripId', trips.tripDelete)
 
