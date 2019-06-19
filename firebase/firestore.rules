@@ -46,10 +46,14 @@ service cloud.firestore {
         allow delete: if resource.data.user.id == request.auth.uid
       }
 
+      // Reports
+      match /flags/{flagId} {
+        allow create: if request.auth.uid == request.resource.data.user.id;
+        allow update: if matchUser(resource, request) && matchTrip(resource, request);
+      }
     }
 
     // Trips Users
-    
     match /trips-users/{tripUserId} {
       // Only read trips-users you owns or are trip owner
       allow read: if resource.data.user.id == request.auth.uid || isTripPublic(resource.data.trip.id) || isTripOwner(resource.data.trip.id) 
