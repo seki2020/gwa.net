@@ -14,6 +14,7 @@ admin.initializeApp({
 
 // Routers
 const api = require('./routers/api')
+const web = require('./routers/web')
 const migrate = require('./routers/migrate')
 
 // Middle ware 
@@ -25,6 +26,8 @@ app.use(favicon(path.join(__dirname, '/static/favicon.ico')))
 
 // Set the routers
 app.use('/api', api)
+app.use('/web', web)
+
 app.use('/migrate', migrate)
 
 
