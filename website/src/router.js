@@ -24,6 +24,26 @@ export default new Router({
       path: '/auth/action', name: 'auth', component: Auth
     },
     {
+      path: '/management',
+      name: 'management',
+      component: () => import(/* webpackChunkName: "management" */ './views/management.vue'),
+      children: [
+        {
+          path: 'users',
+          component: () => import(/* webpackChunkName: "management" */ './components/management/users.vue')
+        },
+        {
+          path: 'trips',
+          component: () => import(/* webpackChunkName: "management" */ './components/management/trips.vue')
+        },
+        {
+          path: 'flags',
+          component: () => import(/* webpackChunkName: "management" */ './components/management/flags.vue')
+        }
+      ]
+
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
