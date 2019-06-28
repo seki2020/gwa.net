@@ -22,7 +22,7 @@ const migrate = require('./routers/migrate')
 
 // Locally serve static files
 app.use('/static', express.static('static/static'))
-app.use(favicon(path.join(__dirname, '/static/favicon.ico')))
+// app.use(favicon(path.join(__dirname, '/static/favicon.ico')))
 
 // Set the routers
 app.use('/api', api)
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 // Listen to the App Engine-specified port, or 8080 otherwise
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   // console.log(`Server listening on port ${PORT}...`);
 });

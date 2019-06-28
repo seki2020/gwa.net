@@ -18,14 +18,23 @@ module.exports.getFlags = async function (req, res) {
   }).then(data => {
     // Transform the data
     return data.map(doc => {
-      return {
+      let result = {
         'id': doc.id,
         'type': doc.type,
         'created': doc.created.toDate(),
         'trip': doc.trip,
+        // 'post': {
+        //   'id': doc.post.id
+        // },
         'user': doc.user
       }
-
+      if(doc.post) {
+        result['post'] = {
+          'id': doc.post.id,
+          'name': doc.post.name
+        }
+      }
+      return result
     })
   }).then (data => {
     // Return the data
