@@ -26,9 +26,9 @@ exports = module.exports = functions.firestore
       const newDocument = change.after.exists ? change.after.data() : null
 
       const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
-      console.log('Action: ', action)
-      console.log('Old: ', oldDocument)
-      console.log('New: ', newDocument)
+      // console.log('Action: ', action)
+      // console.log('Old: ', oldDocument)
+      // console.log('New: ', newDocument)
 
       // const tripId = context.params.tripId
       const tripId = oldDocument ? oldDocument.trip.id : newDocument.trip.id

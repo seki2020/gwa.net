@@ -36,9 +36,9 @@ exports = module.exports = functions.firestore
       const newDocument = change.after.exists ? change.after.data() : null
 
       const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
-      console.log('Action: ', action)
-      console.log('Old: ', oldDocument)
-      console.log('New: ', newDocument)
+      // console.log('Action: ', action)
+      // console.log('Old: ', oldDocument)
+      // console.log('New: ', newDocument)
 
       const tripId = context.params.tripId
       const userId = oldDocument ? oldDocument.user.id : newDocument.user.id
@@ -63,11 +63,11 @@ exports = module.exports = functions.firestore
 
       // Deal with name changes of the trip, but only for update
       if (action === 'update' && (oldDocument.name !== newDocument.name || oldDocument.privacy !== newDocument.privacy)) {
-        console.log("Go and update trip names in the followers?")
+        // console.log("Go and update trip names in the followers?")
 
         db.collection('trips-users').where('trip.id', '==', tripId).get()
         .then(snapshot => {
-          console.log('Got Trip Users results')
+          // console.log('Got Trip Users results')
           
           var data = {
             'trip.name': newDocument.name,

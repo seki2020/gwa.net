@@ -81,7 +81,7 @@ exports = module.exports = functions.firestore
     const newDocument = change.after.exists ? change.after.data() : null
 
     const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
-    console.log('Action: ', action)
+    // console.log('Action: ', action)
   
     // Rules
     // 1. Keep recent message and media in Trip and TripUser
@@ -100,66 +100,6 @@ exports = module.exports = functions.firestore
 
           // Update the 'recent' data
           recentData = updateRecentData(tripData, oldDocument, newDocument)
-
-          // const recent = tripData.recent
-
-          // // 0. Current recent data
-          // recentData = {
-          //   recent: {
-          //     message: recent && recent.message ? recent.message : "",
-          //     user: recent && recent.user ? recent.user : tripData.user,
-          //     media: recent && recent.media ? recent.media : []
-          //   },
-          //   updated: tripData.updated
-          // }            
-          // var tmpMedia = []
-
-          // // 1. Process the 'old' document (for update and delete)
-          // if (oldDocument) {
-          //   // Remove the old media from the recent media
-          //   const oldMedia = oldDocument.media
-          //   for (var i=0; i<recentData.recent.media.length; i++) {
-          //     // Remove any matching media from the recentMedia
-          //     var found = false
-          //     if (oldMedia !== undefined) {
-          //       for (var j=0; j<oldMedia.length; j++) {
-          //         if (recentData.recent.media[i].id === oldMedia[j].id) {
-          //           found = true
-          //         }
-          //       }
-          //     }
-          //     if (!found) {
-          //       tmpMedia.push(recentData.recent.media[i])
-          //     }
-          //   } 
-          //   recentData.recent.media = tmpMedia
-
-          //   // Remove the message
-          //   if (oldDocument.message === recentData.recent.message) {
-          //     recentData.recent.message = ""
-          //   }
-          // }
-
-          // // 2. Process the 'new' document (for create and update)
-          // if (newDocument) {
-          //   var newMedia = []
-          //   const media = newDocument.media
-          //   if (media !== undefined && media.length > 0) {
-          //     for (var k=0; k<Math.min(4, media.length); k++) {
-          //       newMedia.push(media[k])
-          //     }
-          //   } 
-          //   const count = Math.min((4 - newMedia.length), recentData.recent.media.length)
-          //   for (var l=0; l<count; l++) {
-          //     newMedia.push(recentData.recent.media[l])
-          //   }
-
-          //   // Set the New values
-          //   recentData.recent.message = newDocument.message
-          //   recentData.recent.user = newDocument.user
-          //   recentData.recent.media = newMedia
-          //   recentData.updated = newDocument.updated
-          // }
 
           // Figure out the countries
           var countries = tripData.countries ? tripData.countries : []
@@ -183,13 +123,13 @@ exports = module.exports = functions.firestore
         return true
       })
       .then(() => {
-        console.log('Done update of the Trip, continue with Trip Users')
+        // console.log('Done update of the Trip, continue with Trip Users')
 
         // Get the Trip users
         return db.collection('trips-users').where('trip.id', '==', tripId).get()
       })
       .then(snapshot => {
-        console.log('Got Trip Users results')
+        // console.log('Got Trip Users results')
 
         // Once we get the results, begin a batch
         var batch = db.batch();
@@ -202,11 +142,11 @@ exports = module.exports = functions.firestore
         return batch.commit();
       })
       .then(() => {
-        console.log('Done with the tripUsers')
+        // console.log('Done with the tripUsers')
 
         // in case of a delete, remove the media from storage
         if (action === 'delete') {
-          console.log('Do media delete')
+          // console.log('Do media delete')
           const storage = admin.storage()
           for (var j=0; j<oldDocument.media.length; j++) {
             let media = oldDocument.media[j]
@@ -214,7 +154,7 @@ exports = module.exports = functions.firestore
             const bucketName = 'gwa-net.appspot.com';
             const filename = `trips/${tripId}/images/${media.id}.jpg`
 
-            console.log(`   + media: ${filename}`)
+            // console.log(`   + media: ${filename}`)
 
             storage.bucket(bucketName).file(filename).delete()
           }

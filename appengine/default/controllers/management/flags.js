@@ -23,9 +23,6 @@ module.exports.getFlags = async function (req, res) {
         'type': doc.type,
         'created': doc.created.toDate(),
         'trip': doc.trip,
-        // 'post': {
-        //   'id': doc.post.id
-        // },
         'user': doc.user
       }
       if(doc.post) {
