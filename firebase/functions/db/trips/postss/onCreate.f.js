@@ -38,10 +38,11 @@ exports = module.exports = functions.firestore
             var newNotificationRef = userRef.collection('notifications').doc()
             batch.set(newNotificationRef, {
               created: data.created,
+              type: 10,
               trip: data.trip,
               post: {
                 id: postId,
-                name: message
+                message: message
               },
               user: data.user, 
               read: false
