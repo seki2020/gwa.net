@@ -83,6 +83,12 @@ exports = module.exports = functions.firestore
     const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
     // console.log('Action: ', action)
   
+    // Make sure to ignore 'Waypoints'
+    const postType = oldDocument ? oldDocument.type : newDocument.type
+    if(postType === 90) {
+      return true
+    }
+
     // Rules
     // 1. Keep recent message and media in Trip and TripUser
     var recentData = {}
