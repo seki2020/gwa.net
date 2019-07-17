@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './app.vue'
 import router from './router'
+import store from './store'
+
+import Validate from 'vee-validate'
 
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -15,18 +18,22 @@ firebase.initializeApp(config)
 // const auth = app.auth()
 
 Vue.config.productionTip = false
+Vue.use(Validate)
 Vue.use(Formatting)
 Vue.prototype._ = _
 
 new Vue({
-  router,
+  store: store,
+  router: router,
   created () {
     console.log('App created!')
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         console.log(' - App: user: ' + user.uid + ', ' + user.displayName)
+        this.$store.commit('authenticate')
       } else {
         console.log(' - App: NO User')
+        this.$store.commit('deauthenticate')
       }
     })
   },
