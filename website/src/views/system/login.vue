@@ -36,8 +36,11 @@
 
 <script>
 import firebase from 'firebase/app'
+import validator from '../../system/validator/vue-mixin'
 
 export default {
+  name: 'login',
+  mixins: [validator],
   data () {
     return {
       email: '',
@@ -45,6 +48,25 @@ export default {
       message: ''
     }
   },
+  validators: {
+      'email': {
+        required : true,
+        minLength: 4,
+        custom: function(value) {
+            // console.log(" custom validation: firstName")
+            return [true, '']
+        },
+      },
+      'password': {
+        required: true,
+        maxLength: 6,
+        custom: function(value) {
+            // console.log(" custom validation: lastName")
+            return [value === 'Hart', 'Invalid last name']
+        }
+      }
+  },
+
   methods: {
     login () {
       console.log('Login: Go')
