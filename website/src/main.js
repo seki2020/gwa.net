@@ -1,10 +1,18 @@
 import Vue from 'vue'
 import App from './app.vue'
 import router from './router'
-import { translate as _ } from './system/translator'
+
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import { config } from './secrets/firebase'
 
 import 'cookieconsent'
+
 import Formatting from './system/formatting'
+import { translate as _ } from './system/translator'
+
+firebase.initializeApp(config)
+// const auth = app.auth()
 
 Vue.config.productionTip = false
 Vue.use(Formatting)
@@ -12,6 +20,16 @@ Vue.prototype._ = _
 
 new Vue({
   router,
+  created () {
+    console.log('App created!')
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(' - App: user: ' + user.uid + ', ' + user.displayName)
+      } else {
+        console.log(' - App: NO User')
+      }
+    })
+  },
   render: h => h(App)
 }).$mount('#app')
 

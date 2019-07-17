@@ -9,8 +9,8 @@ module.exports = {
     }
   },
   outputDir: '../appengine/default/static',
-  assetsDir: 'static',
-  devServer: {
-    proxy: 'http://localhost:8081'
-  }
+  assetsDir: 'static'
+  // devServer: {
+  //   proxy: 'http://localhost:8081'
+  // }
 }

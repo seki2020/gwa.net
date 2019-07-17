@@ -54,12 +54,12 @@
 <script>
 
 import firebase from 'firebase/app'
-import 'firebase/auth'
-import { config } from '../secrets/firebase'
+// import 'firebase/auth'
+// import { config } from '../secrets/firebase'
 import { translate as _ } from '@/system/translator'
 
-const app = firebase.initializeApp(config)
-const auth = app.auth()
+// const app = firebase.initializeApp(config)
+// const auth = firebase.auth()
 
 export default {
   name: 'auth',
@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     savePassword () {
-      auth.confirmPasswordReset(this.actionCode, this.passwordNew).then((resp) => {
+      firebase.auth().confirmPasswordReset(this.actionCode, this.passwordNew).then((resp) => {
         // Password reset has been confirmed and new password updated.
         this.email = null
         this.success = _('Your password is changed succesfully.')
@@ -95,6 +95,8 @@ export default {
     }
   },
   mounted () {
+    const auth = firebase.auth()
+
     let q = this.$route.query
     this.mode = q.mode
     this.actionCode = q.oobCode

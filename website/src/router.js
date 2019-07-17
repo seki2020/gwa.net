@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/home'
+import Login from './views/system/login'
 import Privacy from './views/privacy'
 import Auth from './views/auth'
 import GoingWalkabout from './views/goingwalkabout'
@@ -13,6 +14,9 @@ export default new Router({
   routes: [
     {
       path: '/', name: 'home', component: Home
+    },
+    {
+      path: '/login', name: 'login', component: Login
     },
     {
       path: '/goingwalkabout', name: 'goingwalkabout', component: GoingWalkabout
