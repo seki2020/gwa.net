@@ -93,7 +93,7 @@ export default {
             .then(
               user => {
                 console.log('Login: Got a user')
-                router.replace('/')
+                router.replace('/management')
                 // _user_.verify(user)
                 //   .then(function(data) {
                 //     console.log('Login: - verify: success')

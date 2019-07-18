@@ -4,7 +4,6 @@
       <div class="container has-text-centered">
         <h1 class="title is-size-1">Going Walkabout</h1>
         <h2 class="subtitle">Capture memories, enjoy your travels</h2>
-        <router-link to="/login">Login</router-link>&nbsp;&nbsp;<a @click.prevent="logOut">Logout</a>
       </div>
     </div>
     <div>
@@ -14,15 +13,8 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
 
 export default {
-  name: 'intro',
-  methods: {
-    logOut () {
-      firebase.auth().signOut()
-      // return false
-    }
-  }
+  name: 'intro'
 }
 </script>
