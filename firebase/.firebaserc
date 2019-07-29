@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "gwa-net"
+    "default": "gwa-net",
+    "production": "gwa-backend"
   }
 }
