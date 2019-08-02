@@ -52,7 +52,7 @@ export default {
     isAuthenticated () {
       return this.$store.state.authenticated
     }
-  },  
+  }
 }
 
 </script>

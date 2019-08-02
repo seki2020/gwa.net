@@ -7,14 +7,14 @@ import Validate from 'vee-validate'
 
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import { config } from './secrets/firebase'
+import { result } from './secrets/firebase-config.json'
 
 import 'cookieconsent'
 
 import Formatting from './system/formatting'
 import { translate as _ } from './system/translator'
 
-firebase.initializeApp(config)
+firebase.initializeApp(result)
 // const auth = app.auth()
 
 Vue.config.productionTip = false

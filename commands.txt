@@ -1,0 +1,20 @@
+Commands
+
+- npm run use  -> Set Firebase to staging
+- npm run use prod -> Firebase to production
+
+- npm run deploy  -> Deploys staging
+- npm run deploy staging -> Deploys staging
+- npm run deploy prod -> Deploys production
+
+# Below is testing stuff
+
+For cool deployment of staging vs production
+1. Get Firebase secrets -> This creates a config file per environment
+firebase setup:web --json --project=gwa-net > ./website/src/secrets/firebase-config.json
+
+2. Build the website, e.g. run the build script for the website. The build outputs to /appengine/default
+npm run --prefix website Build
+
+3. Deploy Appengine
+gcloud app deploy ./appengine/default --project=gwa-backend

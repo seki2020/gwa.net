@@ -1,0 +1,16 @@
+{
+  "name": "goingwalkabout",
+  "version": "1.0.0",
+  "description": "Master project for Going Walkabout backend",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aadjemonkeyrock/gwa.net.git"
+  },
+  "author": "Aad 't Hart",
+  "license": "ISC",
+  "scripts": {
+    "use": "node build/use.js",
+    "deploy": "node build/deploy.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
