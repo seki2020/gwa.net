@@ -11,7 +11,8 @@ const config = require('./secrets/config')
 
 admin.initializeApp({
   credential: admin.credential.cert(config.serviceAccount),
-  databaseURL: config.databaseUrl
+  databaseURL: config.databaseUrl,
+  storageBucket: config.bucketName
 });
 
 // Routers

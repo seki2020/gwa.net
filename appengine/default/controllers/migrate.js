@@ -59,7 +59,7 @@ module.exports.getTrips = async function (req, res) {
     const response = await got(remoteUrl + tripUrl, {json: true})
     const result = response.body["response"]
 
-    migrateEvent(req, res, result["event"])
+    // migrateTrip(req, res, result["event"])
   }
   catch (error ) {
     console.log(error)
@@ -68,7 +68,7 @@ module.exports.getTrips = async function (req, res) {
   res.send('Get and show the trips')
 }
 
-async function migrateEvent(req, res, event) {
+async function migrateTrip(req, res, event) {
   console.log(`Migrate: ${event.url} `)
 
   // Try to find in the datastore
@@ -77,7 +77,7 @@ async function migrateEvent(req, res, event) {
     .then(snapshot => {
       if (snapshot.empty) {
         // Add the event
-        addEvent(req, res, event)
+        addTrip(req, res, event)
         
       }
     })
@@ -86,7 +86,7 @@ async function migrateEvent(req, res, event) {
     });
 }
 
-async function addEvent(req, res, event) {
+async function addTrip(req, res, event) {
   console.log(` - Add: ${event.url}`)
   // Build data structure to insert
   data = {

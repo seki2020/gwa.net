@@ -131,6 +131,7 @@ exports = module.exports = functions.firestore
         if (action === 'delete') {
           console.log('Do media delete')
           const storage = admin.storage()
+          // const bucket = storage.bucketName
           for (var j=0; j<oldDocument.media.length; j++) {
             let media = oldDocument.media[j]
             
