@@ -2,7 +2,6 @@
 const admin = require('firebase-admin')
 const db = admin.firestore()
 
-// Bucket name: gwa-net.appspot.com
 module.exports.tripsPosts = async function (req, res) {
 
   console.log(`Convert TripsPosts`)

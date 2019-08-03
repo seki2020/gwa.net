@@ -37,14 +37,14 @@ export default {
   },
   async created () {
     console.log('do stuff')
-    // axios.get('/web/flags')
-    //   .then(response => {
-    //     console.log(response)
-    //     this.flags = response.data.flags
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
+    axios.get('/web/flags')
+      .then(response => {
+        console.log(response)
+        this.flags = response.data.flags
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
   methods: {
     getTypeName (type) {

@@ -288,7 +288,6 @@ async function addActivity(trip, activity) {
 
     for (i=0; i<media_list.length; i++) {
       const media = media_list[i]
-      // const bucketName = `gs://gwa-net.appspot.com/trips/${trip.uid}/images/${media.uid}.jpg`
 
       const bucketName = 'gwa-net.appspot.com';
       const filename = `trips/${trip.id}/images/${media.id}.jpg`

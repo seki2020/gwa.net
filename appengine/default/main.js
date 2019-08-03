@@ -5,11 +5,14 @@ const path = require('path')
 const app = express();
 
 const admin = require('firebase-admin')
-const serviceAccount = require('./secrets/gwa-net-13e914d23139.json');
+// const serviceAccount = require('./secrets/gwa-net-13e914d23139.json');
+
+const config = require('./secrets/config')
+// console.log(config.adminUserId)
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://gwa-net.firebaseio.com'
+  credential: admin.credential.cert(config.serviceAccount),
+  databaseURL: config.databaseUrl
 });
 
 // Routers
@@ -20,6 +23,11 @@ const migrate = require('./routers/migrate')
 // Middle ware 
 // app.use(morgan('combined'))
 
+// app.use(function(req, res, next) {
+//   res.setHeader("Content-Security-Policy", "default-src 'self'");
+//   return next();
+// });
+
 // Locally serve static files
 app.use('/static', express.static('static/static'))
 // app.use(favicon(path.join(__dirname, '/static/favicon.ico')))
@@ -27,11 +35,10 @@ app.use('/static', express.static('static/static'))
 // Set the routers
 app.use('/api', api)
 app.use('/web', web)
-
 app.use('/migrate', migrate)
 
-
-app.get('/', (req, res) => {
+// For all other urls serve static/index.html. So we can type URLs
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname + '/static/index.html'))
 });
 

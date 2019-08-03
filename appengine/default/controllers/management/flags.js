@@ -3,7 +3,6 @@ const admin = require('firebase-admin')
 const db = admin.firestore()
 const storage = admin.storage()
 
-// Bucket name: gwa-net.appspot.com
 module.exports.getFlags = async function (req, res) {
   console.log(`Get Flags`)
 
