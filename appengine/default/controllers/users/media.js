@@ -1,19 +1,15 @@
 const admin = require('firebase-admin')
 const storage = admin.storage()
 
-// Bucket name: gwa-net.appspot.com
+const config = require('../../secrets/config')
+
 module.exports.getImage = async function (req, res) {
   const imageId = req.params.imageId
 
-  const bucketName = 'gwa-net.appspot.com';
+  const bucketName = config.bucketName
   const srcFilename = `users/${imageId}.jpg`
 
-  var f = storage
-    .bucket(bucketName)
-    .file(srcFilename)
-
-  // console.log("We got a file, or not?")
-  // console.log(f)  
+  var f = storage.bucket(bucketName).file(srcFilename)
   f.download().then(function(data) {
     // console.log(data)
     var content = data[0]

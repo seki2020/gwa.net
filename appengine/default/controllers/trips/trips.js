@@ -1,9 +1,9 @@
-
 const admin = require('firebase-admin')
 const db = admin.firestore()
 const storage = admin.storage()
 
-// Bucket name: gwa-net.appspot.com
+const config = require('../../secrets/config')
+
 module.exports.tripDelete = async function (req, res) {
   const tripId = req.params.tripId
   const uid = req.token.uid
@@ -54,11 +54,9 @@ module.exports.tripDelete = async function (req, res) {
                     for (i=0; i<post.media.length; i++) {
                       let media = post.media[i]
                       
-                      const bucketName = 'gwa-net.appspot.com';
+                      const bucketName = config.bucketName
                       const filename = `trips/${tripId}/images/${media.id}.jpg`
-  
-                      console.log(`   + media: ${filename}`)
-  
+    
                       var f = storage.bucket(bucketName).file(filename)
                       f.delete().then(() => {
                         console.log("     -- Deleted")

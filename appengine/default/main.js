@@ -5,7 +5,6 @@ const path = require('path')
 const app = express();
 
 const admin = require('firebase-admin')
-// const serviceAccount = require('./secrets/gwa-net-13e914d23139.json');
 
 const config = require('./secrets/config')
 // console.log(config.adminUserId)
