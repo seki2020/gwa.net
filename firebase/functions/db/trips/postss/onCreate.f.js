@@ -4,6 +4,7 @@ const admin = require('firebase-admin')
 // eslint-disable-next-line no-empty
 try {admin.initializeApp(functions.config().firebase);} catch(e) {} // You do that because the admin SDK can only be initialized once.
 
+
 exports = module.exports = functions.firestore
   .document('trips/{tripId}/posts/{postId}')
   .onCreate((snapshot, context) => {
