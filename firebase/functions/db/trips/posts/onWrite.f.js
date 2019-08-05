@@ -2,7 +2,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin')
 // eslint-disable-next-line no-empty
-try {admin.initializeApp(functions.config().firebase);} catch(e) {} // You do that because the admin SDK can only be initialized once.
+// try {admin.initializeApp(functions.config().firebase);} catch(e) {} // You do that because the admin SDK can only be initialized once.
 
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 
@@ -70,6 +70,27 @@ function updateRecentData(tripData, oldDocument, newDocument) {
   return recentData
 }
 
+function postDeleteMedia(tripId, oldDocument) {
+  console.log('Do media delete')
+
+  const config = JSON.parse(process.env.FIREBASE_CONFIG);
+  const storage = admin.storage()
+  const bucketName = config.storageBucket
+
+  const promises = []
+  for (var j=0; j<oldDocument.media.length; j++) {
+    let media = oldDocument.media[j]
+    
+    const filename = `trips/${tripId}/images/${media.id}.jpg`
+    console.log(' - ', filename)
+
+    const p = storage.bucket(bucketName).file(filename).delete()
+    promises.push(p)
+  }
+  console.log("- done the looping, go return all promises")
+  return Promise.all(promises)
+}
+
 exports = module.exports = functions.firestore
   .document('trips/{tripId}/posts/{postId}')
   .onWrite((change, context) => {
@@ -81,7 +102,7 @@ exports = module.exports = functions.firestore
     const newDocument = change.after.exists ? change.after.data() : null
 
     const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
-    // console.log('Action: ', action)
+    console.log('Action: ', action)
   
     // Make sure to ignore 'Waypoints'
     const postType = oldDocument ? oldDocument.type : newDocument.type
@@ -99,43 +120,45 @@ exports = module.exports = functions.firestore
     // Fetch the matching Trip
     const db = admin.firestore()
     const tripRef = db.collection("trips").doc(tripId);
-    tripRef.get()
+
+    return tripRef.get()
       .then(doc => {
-        if (doc.exists) {
-          const tripData = doc.data()
-
-          // Update the 'recent' data
-          recentData = updateRecentData(tripData, oldDocument, newDocument)
-
-          // Figure out the countries
-          var countries = tripData.countries ? tripData.countries : []
-          if (newDocument) {
-            var country = newDocument.place && newDocument.place.country ? newDocument.place.country : null
-            if (country && !countries.includes(country)) {
-              countries.push(country)
-            }
-          }
-
-          // Update the Trip
-          var data = {
-            recent: recentData.recent,
-            updated: recentData.updated,
-            countries: countries,
-            posts: FieldValue.increment(postIncrement)
-          }
-          return tripRef.update(data)       // Return the promise and continue
-
+        if (!doc.exists) {
+          console.log('   + Trip is missing')
+          throw new Error('Trip does not exist')
         }
-        return true
+        const tripData = doc.data()
+
+        // Update the 'recent' data
+        recentData = updateRecentData(tripData, oldDocument, newDocument)
+
+        // Figure out the countries
+        var countries = tripData.countries ? tripData.countries : []
+        if (newDocument) {
+          var country = newDocument.place && newDocument.place.country ? newDocument.place.country : null
+          if (country && !countries.includes(country)) {
+            countries.push(country)
+          }
+        }
+
+        // Update the Trip
+        var data = {
+          recent: recentData.recent,
+          updated: recentData.updated,
+          countries: countries,
+          posts: FieldValue.increment(postIncrement)
+        }
+        return tripRef.update(data)       // Return the promise and continue
+
       })
       .then(() => {
-        // console.log('Done update of the Trip, continue with Trip Users')
+        console.log('Done update of the Trip, continue with Trip Users')
 
         // Get the Trip users
         return db.collection('trips-users').where('trip.id', '==', tripId).get()
       })
       .then(snapshot => {
-        // console.log('Got Trip Users results')
+        console.log('Got Trip Users results')
 
         // Once we get the results, begin a batch
         var batch = db.batch();
@@ -148,29 +171,41 @@ exports = module.exports = functions.firestore
         return batch.commit();
       })
       .then(() => {
-        // console.log('Done with the tripUsers')
+        console.log('Done with the tripUsers: ', action)
 
         // in case of a delete, remove the media from storage
         if (action === 'delete') {
+          console.log(" - do the deletions")
+          return postDeleteMedia(tripId, oldDocument)
+
           // console.log('Do media delete')
-          const storage = admin.storage()
-          for (var j=0; j<oldDocument.media.length; j++) {
-            let media = oldDocument.media[j]
+          // const storage = admin.storage()
+          // for (var j=0; j<oldDocument.media.length; j++) {
+          //   let media = oldDocument.media[j]
             
-            const bucketName = 'gwa-net.appspot.com';
-            const filename = `trips/${tripId}/images/${media.id}.jpg`
+          //   const bucketName = 'gwa-net.appspot.com';
+          //   const filename = `trips/${tripId}/images/${media.id}.jpg`
 
-            // console.log(`   + media: ${filename}`)
+          //   // console.log(`   + media: ${filename}`)
 
-            storage.bucket(bucketName).file(filename).delete()
-          }
+          //   storage.bucket(bucketName).file(filename).delete()
+          // }
         }
+        else {
+          console.log(" - Done")
+          return true
+        }
+      })
+      .then(value => {
+        console.log('value: ', value)
         return true
       })
       .catch(err => {
         console.log('Error getting document', err);
       });
 
-    return true
+
+    // console.log("Function done")  
+    // return true
 
   })  
