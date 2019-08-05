@@ -1,3 +1,4 @@
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Secure by default 
@@ -6,20 +7,6 @@ service cloud.firestore {
       allow write: if false;
     }    
   
-    // Users
-    match /users/{userId} {
-      allow read: if request.auth.uid == userId;
-      allow write: if request.auth.uid == userId;
-
-      match /notifications/{notificationId} {
-        allow read: if request.auth.uid == userId
-        allow update: if request.auth.uid == userId
-        allow delete: if request.auth.uid == userId
-      }
-    }
-
-
-
     // Helper functions
     function matchUser(resource, request) {
       return resource.data.user.id == request.resource.data.user.id
@@ -41,11 +28,41 @@ service cloud.firestore {
       return getTripData(tripId).user.id == request.auth.uid 
     }
 
+    // Users
+    match /users/{userId} {
+      allow read: if request.auth.uid == userId;
+      allow write: if request.auth.uid == userId;
+
+      match /following/{tripId} {
+        allow read: if request.auth.uid == userId || isTripPublic(request.resource.data.trip.id) || isTripOwner(request.resource.data.trip.id) 
+        allow create: if request.auth.uid == userId && existTrip(request.resource.data.trip.id);
+        allow update: if request.auth.uid == userId && matchUser(resource, request) && matchTrip(resource, request)
+        allow delete: if request.auth.uid == userId
+      }
+
+      match /notifications/{notificationId} {
+        allow read: if request.auth.uid == userId
+        allow update: if request.auth.uid == userId
+        allow delete: if request.auth.uid == userId
+      }
+    }
+
     // Trips
     match /trips/{tripId} {
       allow read: if request.auth.uid == resource.data.user.id || resource.data.privacy == 2; 
       allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request)
       allow create: if request.auth.uid == request.resource.data.user.id;
+
+      // match /followers/{userId} {
+      //   // Only read followers that is you or are from public trips, or trips you own
+      //   allow read: if true // resource.data.user.id == request.auth.uid || isTripPublic(resource.data.trip.id) || isTripOwner(resource.data.trip.id) 
+      //   // Only update trips-users you own, but can't update trip or user
+      //   allow update: if true // resource.data.user.id == request.auth.uid && matchUser(resource, request) && matchTrip(resource, request)
+      //   // Only allow to create trips-users for yourself
+      //   allow create: if true // request.auth.uid == request.resource.data.user.id  && existTrip(request.resource.data.trip.id);
+      //   // Only allow deletion of your own records
+      //   allow delete: if true //resource.data.user.id == request.auth.uid
+      // }
 
       match /posts/{postId} {
         allow read: if resource.data.user.id == request.auth.uid || isTripPublic(tripId) || isTripOwner(tripId)
@@ -60,6 +77,14 @@ service cloud.firestore {
         allow update: if matchUser(resource, request) && matchTrip(resource, request);
       }
     }
+
+    // Followers of a Trip (collectionGroup)
+    match /{path=**}/following/{tripId} {
+      // TODO: Needs refinement when adding the Privacy to the following
+      allow read: if true  //request.auth.uid == request.resource.data.user.id || isTripPublic(request.resource.data.trip.id) || isTripOwner(request.resource.data.trip.id) 
+      // allow read: if request.auth.uid == request.resource.data.user.id || isTripPublic(request.resource.data.trip.id) || isTripOwner(request.resource.data.trip.id) 
+    }    
+
 
     // Trips Users
     match /trips-users/{tripUserId} {

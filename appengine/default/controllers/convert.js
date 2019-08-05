@@ -54,3 +54,38 @@ module.exports.tripsPosts = async function (req, res) {
     res.send('Converting TripsPosts')
 
 }
+
+module.exports.followers = async function (req, res) {
+
+  console.log(`Convert Followers`)
+
+  // Get all the TripUsers and recreate as Trips/Followers
+  db.collection('trips-users').get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        var data = doc.data()
+        var userId = data.user.id
+        var tripId = data.trip.id
+
+        // console.log("Source: ", doc.id, " => ", data);
+
+        // Create a Trip/Follower
+        ref = db.collection('users').doc(userId).collection('following').doc(tripId).set(data)
+          .then(ref => {
+            console.log("Created Following")
+          })  
+          .catch(error => {
+            console.log(error)
+          })
+
+        // console.log("Target: ", doc.id, " => ", data);
+
+      })
+    })
+    .catch(err => {
+      console.log('Error getting documents', err);
+    })
+
+    res.send('Converting Followers')
+
+}

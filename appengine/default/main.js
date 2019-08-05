@@ -1,5 +1,5 @@
 const express = require('express');
-// const morgan = require('morgan')
+const morgan = require('morgan')
 const favicon = require('serve-favicon')
 const path = require('path')
 const app = express();
@@ -21,7 +21,7 @@ const web = require('./routers/web')
 const migrate = require('./routers/migrate')
 
 // Middle ware 
-// app.use(morgan('combined'))
+app.use(morgan('common'))
 
 // app.use(function(req, res, next) {
 //   res.setHeader("Content-Security-Policy", "default-src 'self'");

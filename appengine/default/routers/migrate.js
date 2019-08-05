@@ -30,6 +30,7 @@ router.get('/', function (req, res) {
 router.get('/trips/:tripUrl', migrate2.getTrips)
 router.get('/trips/:tripUrl/posts', migrate2.getPosts)
 
+router.get('/convert/followers', convert.followers)
 router.get('/convert/trips-posts', convert.tripsPosts)
 
 module.exports = router
