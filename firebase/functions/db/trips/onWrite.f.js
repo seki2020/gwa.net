@@ -6,6 +6,8 @@ const admin = require('firebase-admin')
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 const Constants = require('../constants')
 
+const { getAction, isPropDirty } = require('../utils')
+
 
 function updateUserTripCount(action, userId, oldDocument, newDocument) {
   // Keep a count of public trips in the user (owner)
@@ -31,17 +33,26 @@ function updateUserTripCount(action, userId, oldDocument, newDocument) {
 exports = module.exports = functions.firestore
     .document('trips/{tripId}')
     .onWrite((change, context) => {
-      // Get an object representing the document
-      const oldDocument = change.before.exists ? change.before.data(): null
-      const newDocument = change.after.exists ? change.after.data() : null
 
-      const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
-      // console.log('Action: ', action)
-      // console.log('Old: ', oldDocument)
-      // console.log('New: ', newDocument)
+      const [action, oldDocument, newDocument] = getAction(change)
+      console.log('Action: ', action)
+      console.log('Old: ', oldDocument)
+      console.log('New: ', newDocument)
 
       const tripId = context.params.tripId
       const userId = oldDocument ? oldDocument.user.id : newDocument.user.id
+
+      // Check for dirty resent data
+      if (action === 'update') {
+        if (isPropDirty('recent', oldDocument, newDocument)) {
+          console.log('- Dirty recent')
+        }
+        if (isPropDirty('name', oldDocument, newDocument)) {
+          console.log('- Dirty name')
+        }
+
+      }
+
 
       // Rules
       // 1. Keep a count of all public Trips for a User

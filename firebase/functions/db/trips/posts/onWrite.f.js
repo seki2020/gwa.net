@@ -6,6 +6,8 @@ const admin = require('firebase-admin')
 
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 
+const { getAction, isPropDirty } = require('../../utils')
+
 function updateRecentData(tripData, oldDocument, newDocument) {
   const recent = tripData.recent
 
@@ -97,11 +99,7 @@ exports = module.exports = functions.firestore
     const tripId = context.params.tripId
     // const postId = context.params.postId
 
-    // Get an object representing the document
-    const oldDocument = change.before.exists ? change.before.data(): null
-    const newDocument = change.after.exists ? change.after.data() : null
-
-    const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
+    const [action, oldDocument, newDocument] = getAction(change)
     console.log('Action: ', action)
   
     // Make sure to ignore 'Waypoints'

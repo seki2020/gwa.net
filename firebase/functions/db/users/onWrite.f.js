@@ -21,6 +21,7 @@ exports = module.exports = functions.firestore
       console.log('Old: ', oldDocument)
       console.log('New: ', newDocument)
 
+      
 
       const options = admin.instanceId().app.options
       console.log('Options: ', options)

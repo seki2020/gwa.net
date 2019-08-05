@@ -14,7 +14,7 @@ module.exports.isPropDirty = function (prop, oldDocument, newDocument) {
   if (oldDocument === null || newDocument === null) {   // One of them null -> dirty
     return true
   }
-  if (oldDocument[prop] !== newDocument[prop]) {
+  if (JSON.stringify(oldDocument[prop]) !== JSON.stringify(newDocument[prop])) {
     return true
   }
   return false
