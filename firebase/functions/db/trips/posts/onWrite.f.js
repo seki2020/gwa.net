@@ -149,55 +149,41 @@ exports = module.exports = functions.firestore
         return tripRef.update(data)       // Return the promise and continue
 
       })
+      // .then(() => {
+      //   console.log('Done update of the Trip, continue with Trip Users')
+
+      //   // Get the Trip users
+      //   return db.collection('trips-users').where('trip.id', '==', tripId).get()
+      // })
+      // .then(snapshot => {
+      //   console.log('Got Trip Users results')
+
+      //   // Once we get the results, begin a batch
+      //   var batch = db.batch();
+      //   snapshot.forEach(doc => {
+      //       // For each doc, add a delete operation to the batch
+      //       batch.update(doc.ref, recentData);
+      //   });
+
+      //   // Commit the batch
+      //   return batch.commit();
+      // })
       .then(() => {
-        console.log('Done update of the Trip, continue with Trip Users')
-
-        // Get the Trip users
-        return db.collection('trips-users').where('trip.id', '==', tripId).get()
-      })
-      .then(snapshot => {
-        console.log('Got Trip Users results')
-
-        // Once we get the results, begin a batch
-        var batch = db.batch();
-        snapshot.forEach(doc => {
-            // For each doc, add a delete operation to the batch
-            batch.update(doc.ref, recentData);
-        });
-
-        // Commit the batch
-        return batch.commit();
-      })
-      .then(() => {
-        console.log('Done with the tripUsers: ', action)
+        console.log('Done with the Trip update: ', action)
 
         // in case of a delete, remove the media from storage
         if (action === 'delete') {
           console.log(" - do the deletions")
           return postDeleteMedia(tripId, oldDocument)
-
-          // console.log('Do media delete')
-          // const storage = admin.storage()
-          // for (var j=0; j<oldDocument.media.length; j++) {
-          //   let media = oldDocument.media[j]
-            
-          //   const bucketName = 'gwa-net.appspot.com';
-          //   const filename = `trips/${tripId}/images/${media.id}.jpg`
-
-          //   // console.log(`   + media: ${filename}`)
-
-          //   storage.bucket(bucketName).file(filename).delete()
-          // }
         }
         else {
-          console.log(" - Done")
           return true
         }
       })
-      .then(value => {
-        console.log('value: ', value)
-        return true
-      })
+      // .then(value => {
+      //   console.log('value: ', value)
+      //   return true
+      // })
       .catch(err => {
         console.log('Error getting document', err);
       });
