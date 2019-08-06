@@ -17,7 +17,7 @@ For users the following:
 - Create: 
   - Nothing
 - Update: 
-   - If isDirty(name) -> Update the Trip Users
+   - If isDirty(name) -> Update the users/following
 - Delete:
    - Should clean up all the user related stuff 
 
@@ -26,12 +26,13 @@ For users the following:
 For Trips the following:
 
 - Create:
-  - Nothing (Trips are created on client and then also the follower is created)
+  - Update User.trips +1
 - Update:
-  - If isDirty(name) -> Update the Trip Users
-  - If isDirty(recent) -> Update the Trip Users
-  - If isDirty(privacy) -> Update the Trip Users
+  - If isDirty(name) -> Update the users/following
+  - If isDirty(recent) -> Update the users/following
+  - If isDirty(privacy) -> Update the users/following
 - Delete:
+  - Update User.trips -1
   - Should clean up all the Trip related stuff
 
 ### Trip Users (following trips)

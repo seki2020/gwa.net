@@ -5,7 +5,7 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 exports = module.exports = functions.firestore
   .document('trips/{tripId}')
-  .onCreate((snapshot, context) => {
+  .onDelete((snapshot, context) => {
     const tripId = context.params.tripId
 
     // Get an object representing the document
@@ -15,7 +15,7 @@ exports = module.exports = functions.firestore
     const db = admin.firestore()
     const userRef = db.collection("users").doc(userId);
     return userRef.update({
-        trips: FieldValue.increment(1)
+        trips: FieldValue.increment(-1)
       })    
       .then(() => {
         console.log('Done')

@@ -5,15 +5,15 @@ const { getAction, isPropDirty } = require('../utils')
 
 exports = module.exports = functions.firestore
   .document('trips/{tripId}')
-  .onWrite((change, context) => {
+  .onUpdate((change, context) => {
 
     const [action, oldDocument, newDocument] = getAction(change)
-    console.log('Action: ', action)
-    console.log('Old: ', oldDocument)
-    console.log('New: ', newDocument)
+    // console.log('Action: ', action)
+    // console.log('Old: ', oldDocument)
+    // console.log('New: ', newDocument)
 
     const tripId = context.params.tripId
-    const userId = oldDocument ? oldDocument.user.id : newDocument.user.id
+    // const userId = oldDocument ? oldDocument.user.id : newDocument.user.id
 
     const isDirtyRecent = isPropDirty('recent', oldDocument, newDocument) 
     const isDirtyName = isPropDirty('name', oldDocument, newDocument) 
@@ -23,51 +23,34 @@ exports = module.exports = functions.firestore
     if (!isDirtyRecent && !isDirtyName && !isDirtyPrivate) {
       return true
     }
-    else {
-      const db = admin.firestore()
 
-      // const userRef = db.collection("users").doc(userId);
-      // return userRef.update({
-      //   trips: FieldValue.increment(1)
-      // })    
+    const db = admin.firestore()
+    return db.collectionGroup('following').where('trip.id', '==', tripId).get()
+      .then(snapshot => {
+        console.log('Got followers results')
+
+        var data = {
+          'recent': newDocument.recent ? newDocument.recent : null,
+          'privacy': newDocument.privacy,
+          'trip.name': newDocument.name,
+        }
   
-      return db.collectionGroup('following').where('trip.id', '==', tripId).get()
-        .then(snapshot => {
-          console.log('Got followers results')
-          
-          var data = {
-            'recent': newDocument.recent,
-            'privacy': newDocument.privacy,
-            'trip.name': newDocument.name,
-          }
-    
-          // Once we get the results, begin a batch
-          var batch = db.batch();
-          snapshot.forEach(doc => {
-            batch.update(doc.ref, data);
-          });
-    
-          // Commit the batch
-          return batch.commit();          
-        })
-    
-        .then(() => {
-          console.log('Done')
-          return true
-        })
-        .catch(err => {
-          console.log('Error: ', err);
-        })
+        // Once we get the results, begin a batch
+        var batch = db.batch();
+        snapshot.forEach(doc => {
+          batch.update(doc.ref, data);
+        });
   
-
-    }
-
+        // Commit the batch
+        return batch.commit();          
+      })
   
-  
-  
+      .then(() => {
+        console.log('Done')
+        return true
+      })
+      .catch(err => {
+        console.log('Error: ', err);
+      })
 
-    
-    
-
-
-  })
+})

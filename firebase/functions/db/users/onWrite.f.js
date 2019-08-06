@@ -9,6 +9,7 @@ const { getAction, isPropDirty } = require('../utils')
 exports = module.exports = functions.firestore
     .document('users/{userId}')
     .onWrite((change, context) => {
+      const userId = context.params.userId
       // Get an object representing the document
       // const oldDocument = change.before.exists ? change.before.data(): null
       // const newDocument = change.after.exists ? change.after.data() : null
@@ -16,30 +17,44 @@ exports = module.exports = functions.firestore
       // const action = oldDocument === null ? 'create': newDocument === null ? 'delete': 'update'
       // console.log('Action: ', action)
 
+
       const [action, oldDocument, newDocument] = getAction(change)
       console.log('Action: ', action)
-      console.log('Old: ', oldDocument)
-      console.log('New: ', newDocument)
-
-      
-
-      const options = admin.instanceId().app.options
-      console.log('Options: ', options)
-
-      let firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
-      /* {  databaseURL: 'https://databaseName.firebaseio.com',
-             storageBucket: 'projectId.appspot.com',
-             projectId: 'projectId' }
-      */
-      console.log('Config: ', firebaseConfig)
-
-      // Storage bucket
-      const bucket = admin.instanceId().app.options.storageBucket
-      console.log('Bucket: ', bucket)
+      // console.log('Old: ', oldDocument)
+      // console.log('New: ', newDocument)
 
       if (action === 'update' && isPropDirty('name', oldDocument, newDocument)) {
         console.log(" - update the name")
+
+        const db = admin.firestore()
+        return db.collection('users').doc(userId).collection('following').get()
+          .then(snapshot => {
+            console.log('Got followers results')
+    
+            var data = {
+              'user.name': newDocument.name,
+            }
+      
+            // Once we get the results, begin a batch
+            var batch = db.batch();
+            snapshot.forEach(doc => {
+              batch.update(doc.ref, data);
+            });
+      
+            // Commit the batch
+            return batch.commit();          
+          })
+      
+          .then(() => {
+            console.log('Done')
+            return true
+          })
+          .catch(err => {
+            console.log('Error: ', err);
+          })
+      }
+      else {
+        return true
       }
 
-      return true
     })
