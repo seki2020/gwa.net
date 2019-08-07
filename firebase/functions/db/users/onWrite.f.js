@@ -20,8 +20,8 @@ exports = module.exports = functions.firestore
 
       const [action, oldDocument, newDocument] = getAction(change)
       console.log('Action: ', action)
-      // console.log('Old: ', oldDocument)
-      // console.log('New: ', newDocument)
+      console.log('Old: ', oldDocument)
+      console.log('New: ', newDocument)
 
       if (action === 'update' && isPropDirty('name', oldDocument, newDocument)) {
         console.log(" - update the name")

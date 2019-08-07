@@ -14,7 +14,7 @@ Set environment flag
 
 Run a test script (in terminal with environment set)
 > node ./functions/tests/test.js
-> node .tests.js
+> node test.js
 
 Doing this will execute you code agains the emulator and Firestore functions will trigger
 This makes it possible to create unit tests
