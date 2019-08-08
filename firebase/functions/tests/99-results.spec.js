@@ -19,6 +19,18 @@ describe('Results', () => {
       let users = await db.collection('users').get()
       for (user of users.docs) {
         console.log(user.id, user.data())
+
+        console.log(' - Following')
+        let following = await db.collection('users').doc(user.id).collection('following').get()
+        for (f of following.docs) {
+          console.log('   + ', f.data())
+        }
+
+        console.log(' - Notifications')
+        let notifications = await db.collection('users').doc(user.id).collection('notifications').get()
+        for (n of notifications.docs) {
+          console.log('   + ', n.data())
+        }
       }
     })
 

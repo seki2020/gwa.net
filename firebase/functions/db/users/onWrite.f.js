@@ -20,35 +20,30 @@ exports = module.exports = functions.firestore
 
       const [action, oldDocument, newDocument] = getAction(change)
       console.log('Action: ', action)
-      console.log('Old: ', oldDocument)
-      console.log('New: ', newDocument)
+      // console.log('Old: ', oldDocument)
+      // console.log('New: ', newDocument)
 
       if (action === 'update' && isPropDirty('name', oldDocument, newDocument)) {
-        console.log(" - update the name")
+        // console.log(" - update the name")
 
         const db = admin.firestore()
         return db.collection('users').doc(userId).collection('following').get()
           .then(snapshot => {
-            console.log('Got followers results')
-    
-            var data = {
-              'user.name': newDocument.name,
-            }
-      
             // Once we get the results, begin a batch
             var batch = db.batch();
             snapshot.forEach(doc => {
-              batch.update(doc.ref, data);
+              batch.update(doc.ref, {
+                'user.name': newDocument.name,
+              });
             });
       
             // Commit the batch
             return batch.commit();          
           })
-      
-          .then(() => {
-            console.log('Done')
-            return true
-          })
+          // .then(() => {
+          //   console.log('Done')
+          //   return true
+          // })
           .catch(err => {
             console.log('Error: ', err);
           })
@@ -56,5 +51,4 @@ exports = module.exports = functions.firestore
       else {
         return true
       }
-
     })

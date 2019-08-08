@@ -72,6 +72,50 @@ function updateRecentData(tripData, oldDocument, newDocument) {
   return recentData
 }
 
+function createNotifications(tripId, postId, newDocument) {
+  console.log(" --- go create notifications")
+
+  const userId = newDocument.user.id
+  // const message = newDocument.message
+  
+  const db = admin.firestore()
+  return db.collectionGroup('following').where('trip.id', '==', tripId).get()
+    .then(snapshot => {
+      console.log('Got followers')
+
+      // Once we get the results, begin a batch
+      var batch = db.batch();
+      snapshot.forEach(doc => {
+        var followerData = doc.data()
+        var followerId = followerData.user.id
+
+        if (followerId !== userId) {      // Don't create a notification for the author of the post
+          // Create a ref with auto-generated ID
+          var ref = db.collection('users').doc(followerId).collection('notifications').doc()
+          batch.set(ref, {
+            created: newDocument.created,
+            type: 10,
+            trip: newDocument.trip,
+            post: {
+              id: postId,
+              message: newDocument.message
+            },
+            user: newDocument.user, 
+            read: false
+          });
+        }
+
+      });
+
+      // Commit the batch
+      console.log(' - commit the batch')
+      return batch.commit();
+    })
+    .catch(err => {
+      console.log('Error: ', err);
+    });
+}
+
 function postDeleteMedia(tripId, oldDocument) {
   console.log('Do media delete')
 
@@ -97,7 +141,7 @@ exports = module.exports = functions.firestore
   .document('trips/{tripId}/posts/{postId}')
   .onWrite((change, context) => {
     const tripId = context.params.tripId
-    // const postId = context.params.postId
+    const postId = context.params.postId
 
     const [action, oldDocument, newDocument] = getAction(change)
     console.log('Action: ', action)
@@ -149,30 +193,16 @@ exports = module.exports = functions.firestore
         return tripRef.update(data)       // Return the promise and continue
 
       })
-      // .then(() => {
-      //   console.log('Done update of the Trip, continue with Trip Users')
-
-      //   // Get the Trip users
-      //   return db.collection('trips-users').where('trip.id', '==', tripId).get()
-      // })
-      // .then(snapshot => {
-      //   console.log('Got Trip Users results')
-
-      //   // Once we get the results, begin a batch
-      //   var batch = db.batch();
-      //   snapshot.forEach(doc => {
-      //       // For each doc, add a delete operation to the batch
-      //       batch.update(doc.ref, recentData);
-      //   });
-
-      //   // Commit the batch
-      //   return batch.commit();
-      // })
       .then(() => {
         console.log('Done with the Trip update: ', action)
 
         // in case of a delete, remove the media from storage
-        if (action === 'delete') {
+        if (action === 'create') {
+          console.log(" - do the notifications")
+          return createNotifications(tripId, postId, newDocument)
+          // return true
+        }
+        else if (action === 'delete') {
           console.log(" - do the deletions")
           return postDeleteMedia(tripId, oldDocument)
         }
@@ -187,9 +217,5 @@ exports = module.exports = functions.firestore
       .catch(err => {
         console.log('Error getting document', err);
       });
-
-
-    // console.log("Function done")  
-    // return true
 
   })  
