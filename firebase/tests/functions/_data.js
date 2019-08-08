@@ -18,7 +18,7 @@ const tripData = {
   updated: admin.firestore.Timestamp.fromDate(new  Date())
 }
 
-const followingData = {
+const followerData = {
   trip: {
     id: tripId,
     name: tripData.name,
@@ -54,6 +54,6 @@ module.exports.userId = userId
 module.exports.userData = userData
 module.exports.tripId = tripId
 module.exports.tripData = tripData
-module.exports.followingData = followingData
+module.exports.followerData = followerData
 module.exports.postId = postId
 module.exports.postData = postData

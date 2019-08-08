@@ -22,7 +22,8 @@ exports = module.exports = functions.firestore
     }
 
     const db = admin.firestore()
-    return db.collectionGroup('following').where('trip.id', '==', tripId).get()
+    return db.collection('trips').doc(tripId).collection('followers').get()
+    // return db.collectionGroup('following').where('trip.id', '==', tripId).get()
       .then(snapshot => {
         var data = {
           'recent': newDocument.recent ? newDocument.recent : null,

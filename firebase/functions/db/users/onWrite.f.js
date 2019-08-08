@@ -27,7 +27,8 @@ exports = module.exports = functions.firestore
         // console.log(" - update the name")
 
         const db = admin.firestore()
-        return db.collection('users').doc(userId).collection('following').get()
+        return db.collectionGroup('followers').where('user.id', '==', userId).get()
+        // return db.collection('users').doc(userId).collection('following').get()
           .then(snapshot => {
             // Once we get the results, begin a batch
             var batch = db.batch();

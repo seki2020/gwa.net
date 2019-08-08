@@ -70,7 +70,8 @@ module.exports.followers = async function (req, res) {
         // console.log("Source: ", doc.id, " => ", data);
 
         // Create a Trip/Follower
-        ref = db.collection('users').doc(userId).collection('following').doc(tripId).set(data)
+        ref = db.collection('trips').doc(tripId).collection('followers').doc(userId).set(data)
+        // ref = db.collection('users').doc(userId).collection('following').doc(tripId).set(data)
           .then(ref => {
             console.log("Created Following")
           })  

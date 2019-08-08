@@ -1,5 +1,5 @@
 const { setup, teardown } = require('./_helpers');
-const { userId, userData, tripId, tripData, followingData, postId, postData } = require('./_data')
+const { userId, userData, tripId, tripData, followerData, postId, postData } = require('./_data')
 
 describe('Results', () => {
   let db;

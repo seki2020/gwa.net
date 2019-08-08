@@ -1,5 +1,5 @@
 const { setup, teardown } = require('./_helpers');
-const { userId, userData, tripId, tripData, followingData } = require('./_data')
+const { userId, userData, tripId, tripData, followerData } = require('./_data')
 
 describe('Firestore Triggers 1', () => {
   let db;
@@ -42,19 +42,19 @@ describe('Firestore Triggers 1', () => {
       expect(trip.exists).toBe(true)
 
       // Create the Trip follower
-      let followingRef = db.collection('users').doc(userId).collection('following').doc(tripId)
-      let followingDoc = await followingRef.get()
-      if (!followingDoc.exists) {
-        await followingRef.set(followingData)
+      let followerRef = db.collection('trips').doc(tripId).collection('followers').doc(userId)
+      let followerDoc = await followerRef.get()
+      if (!followerDoc.exists) {
+        await followerRef.set(followerData)
       }
-      let following = await followingRef.get()
-      expect(following.exists).toBe(true)
+      let follower = await followerRef.get()
+      expect(follower.exists).toBe(true)
 
       // Wait for a while
       await new Promise(res => setTimeout(() => {
         expect(true).toBe(true)
         res()
-      }, 2000))      
+      }, 2500))      
     })
   })
 

@@ -79,7 +79,8 @@ function createNotifications(tripId, postId, newDocument) {
   // const message = newDocument.message
   
   const db = admin.firestore()
-  return db.collectionGroup('following').where('trip.id', '==', tripId).get()
+  return db.collection('trips').doc(tripId).collection('followers').get()
+  // return db.collectionGroup('following').where('trip.id', '==', tripId).get()
     .then(snapshot => {
       console.log('Got followers')
 
@@ -89,7 +90,7 @@ function createNotifications(tripId, postId, newDocument) {
         var followerData = doc.data()
         var followerId = followerData.user.id
 
-        if (followerId !== userId) {      // Don't create a notification for the author of the post
+        // if (followerId !== userId) {      // Don't create a notification for the author of the post
           // Create a ref with auto-generated ID
           var ref = db.collection('users').doc(followerId).collection('notifications').doc()
           batch.set(ref, {
@@ -103,7 +104,7 @@ function createNotifications(tripId, postId, newDocument) {
             user: newDocument.user, 
             read: false
           });
-        }
+        // }
 
       });
 
