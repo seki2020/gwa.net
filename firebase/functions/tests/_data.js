@@ -1,0 +1,59 @@
+const admin = require('firebase-admin')
+
+const userId = 'Mw9os612DzNrX0zn0NlTUmMbhf92'
+const userData = {
+  name: 'Demo user',
+  bio: 'Testing'
+}
+
+const tripId = 'TXt1XIvqUDzBP6T11xTF'
+const tripData = {
+  name: 'Latest Test Trip',
+  privacy: 2,
+  user: {
+    id: userId,
+    name: userData.name
+  },
+  created: admin.firestore.Timestamp.fromDate(new  Date()),
+  updated: admin.firestore.Timestamp.fromDate(new  Date())
+}
+
+const followingData = {
+  trip: {
+    id: tripId,
+    name: tripData.name,
+    privacy: tripData.privacy
+  },
+  user : {
+    id: userId,
+    name: userData.name
+  },
+  role: 'owner',
+  created: tripData.created,
+  updated: tripData.updated
+}
+
+const postId = 'AABBCC'
+const postData = {
+  message: 'Test post',
+  timeZone: "Europe/Amsterdam",
+  timeZoneOffset: 120,
+  trip: {
+    id: tripId,
+    name: tripData.name,
+  },
+  user : {
+    id: userId,
+    name: userData.name
+  },
+  created: admin.firestore.Timestamp.fromDate(new  Date()),
+  updated: admin.firestore.Timestamp.fromDate(new  Date())
+}
+
+module.exports.userId = userId
+module.exports.userData = userData
+module.exports.tripId = tripId
+module.exports.tripData = tripData
+module.exports.followingData = followingData
+module.exports.postId = postId
+module.exports.postData = postData
