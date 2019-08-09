@@ -38,13 +38,13 @@ describe('Results', () => {
         console.log(' - Followers')
         let followers = await db.collection('trips').doc(trip.id).collection('followers').get()
         for (f of followers.docs) {
-          console.log('   + ', f.data())
+          console.log(' + ', f.id, f.data())
         }
 
         console.log(' - Posts')
-        let posts = await db.collection('trips').doc(trip.id).collection('posts').get()
+        let posts = await db.collection('trips').doc(trip.id).collection('posts').orderBy('updated', 'desc').get()
         for (p of posts.docs) {
-          console.log('   + ', p.data())
+          console.log(' + ', p.id, p.data())
         }
 
       }
