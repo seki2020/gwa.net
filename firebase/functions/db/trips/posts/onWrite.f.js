@@ -220,3 +220,36 @@ exports = module.exports = functions.firestore
       });
 
   })  
+
+
+  /*
+  Logic for rebuilding the recent data 
+  - Add post
+    + message = post.message
+    + user = post.user
+    + updated = post.update
+    + post = post.id + post.message
+    + media = post.media with max of 4, if post.media < 4 append existing media up until it's 4
+
+  - Update post
+    + Just rebuild the whole thing, like Delete post  
+
+  - Delete post
+    + Rebuild the recent data  
+
+
+  Rebuilding the recent data
+  1. Get the most recent post
+    - Check what happens if this is done for an update (not latest) or deletion
+    + This post determines the message, updated, etc.. and the first set of media. 
+    + If media < 4 append extra media from the existing recent..
+    WARNING: Media might be delete, so in case of Deletion, remove the media first.
+    NOTE: Currently we don't have Update post functionality  
+
+    db.collection('trips').doc(tripId).collection('posts').orderBy('updated').limit(1)
+      .then(snapshot => {
+
+      })
+
+
+  */
