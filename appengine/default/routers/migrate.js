@@ -2,7 +2,6 @@ var express = require('express')
 var router = express.Router()
 
 const migrate = require('../controllers/migrate')
-const migrate2 = require('../controllers/migrate2')
 const convert = require('../controllers/convert')
 
 // define the home page route
@@ -27,8 +26,8 @@ router.get('/', function (req, res) {
   res.json({"environment": data})  
 })
 
-router.get('/trips/:tripUrl', migrate2.getTrips)
-router.get('/trips/:tripUrl/posts', migrate2.getPosts)
+router.get('/trips/:tripUrl', migrate.getTrips)
+router.get('/trips/:tripUrl/posts', migrate.getPosts)
 
 router.get('/convert/followers', convert.followers)
 router.get('/convert/trips-posts', convert.tripsPosts)

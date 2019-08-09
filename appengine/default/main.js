@@ -5,9 +5,7 @@ const path = require('path')
 const app = express();
 
 const admin = require('firebase-admin')
-
 const config = require('./secrets/config')
-// console.log(config.adminUserId)
 
 admin.initializeApp({
   credential: admin.credential.cert(config.serviceAccount),
@@ -22,11 +20,6 @@ const migrate = require('./routers/migrate')
 
 // Middle ware 
 app.use(morgan('common'))
-
-// app.use(function(req, res, next) {
-//   res.setHeader("Content-Security-Policy", "default-src 'self'");
-//   return next();
-// });
 
 // Locally serve static files
 app.use('/static', express.static('static/static'))
