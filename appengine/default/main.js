@@ -8,7 +8,7 @@ const admin = require('firebase-admin')
 const config = require('./secrets/config')
 
 admin.initializeApp({
-  credential: admin.credential.cert(config.serviceAccount),
+  credential: config.credential,  // admin.credential.cert(config.serviceAccount),
   databaseURL: config.databaseUrl,
   storageBucket: config.bucketName
 });
