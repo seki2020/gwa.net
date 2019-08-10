@@ -5,7 +5,7 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 const { getAction, isPropDirty } = require('../../utils')
 
 
-exports = module.exports = functions.firestore
+exports = module.exports = functions.region('europe-west1').firestore
   .document('trips/{tripId}/posts/{postId}')
   .onCreate((snapshot, context) => {
     const tripId = context.params.tripId

@@ -6,7 +6,7 @@ const admin = require('firebase-admin')
 const { getAction, isPropDirty } = require('../utils')
 
 
-exports = module.exports = functions.firestore
+exports = module.exports = functions.region('europe-west1').firestore
     .document('users/{userId}')
     .onWrite((change, context) => {
       const userId = context.params.userId

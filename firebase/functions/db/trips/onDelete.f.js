@@ -3,7 +3,7 @@ const admin = require('firebase-admin')
 
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 
-exports = module.exports = functions.firestore
+exports = module.exports = functions.region('europe-west1').firestore
   .document('trips/{tripId}')
   .onDelete((snapshot, context) => {
     const tripId = context.params.tripId

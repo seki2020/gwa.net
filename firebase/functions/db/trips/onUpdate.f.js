@@ -3,7 +3,7 @@ const admin = require('firebase-admin')
 
 const { getAction, isPropDirty } = require('../utils')
 
-exports = module.exports = functions.firestore
+exports = module.exports = functions.region('europe-west1').firestore
   .document('trips/{tripId}')
   .onUpdate((change, context) => {
     const tripId = context.params.tripId
