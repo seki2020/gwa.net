@@ -9,21 +9,17 @@ exports = module.exports = functions.region('europe-west1').firestore
     const tripId = context.params.tripId
 
     const [action, oldDocument, newDocument] = getAction(change)
-    // console.log('Action: ', action)
-    // console.log('Old: ', oldDocument)
-    // console.log('New: ', newDocument)
 
     const isDirtyRecent = isPropDirty('recent', oldDocument, newDocument) 
     const isDirtyName = isPropDirty('name', oldDocument, newDocument) 
     const isDirtyPrivate = isPropDirty('privacy', oldDocument, newDocument) 
     
-    if (!isDirtyRecent && !isDirtyName && !isDirtyPrivate) {
+    if (newDocument.deleted || (!isDirtyRecent && !isDirtyName && !isDirtyPrivate)) {
       return true
     }
 
     const db = admin.firestore()
     return db.collection('trips').doc(tripId).collection('followers').get()
-    // return db.collectionGroup('following').where('trip.id', '==', tripId).get()
       .then(snapshot => {
         var data = {
           'recent': newDocument.recent ? newDocument.recent : null,
@@ -40,13 +36,8 @@ exports = module.exports = functions.region('europe-west1').firestore
         // Commit the batch
         return batch.commit();          
       })
-  
-      .then(() => {
-        console.log('Done')
-        return true
-      })
       .catch(err => {
-        console.log('Error: ', err);
+        console.error(err);
       })
 
 })

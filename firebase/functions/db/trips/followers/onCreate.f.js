@@ -13,12 +13,8 @@ exports = module.exports = functions.region('europe-west1').firestore
     return tripRef.update({
         followers: FieldValue.increment(1)
       })    
-      .then(() => {
-        console.log('Done')
-        return true
-      })
       .catch(err => {
-        console.log('Error: ', err);
+        console.error(err);
       })
 
   })  

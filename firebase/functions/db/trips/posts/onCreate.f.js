@@ -62,17 +62,13 @@ exports = module.exports = functions.region('europe-west1').firestore
           countries: countries,
           posts: FieldValue.increment(1)
         }
-        console.log("go and update the trip", data)
         return tripRef.update(data)       
       })
       .then(() => {
-        console.log('Done with the Trip update')
         // Collect followers
         return db.collection('trips').doc(tripId).collection('followers').get()
       })
       .then(snapshot => {
-        console.log('Got followers')
-  
         // For each follower create a notification (except for the creator ;-))
         var batch = db.batch();
         snapshot.forEach(doc => {
@@ -80,7 +76,6 @@ exports = module.exports = functions.region('europe-west1').firestore
           var followerId = followerData.user.id
   
           if (followerId !== userId) {      // Don't create a notification for the author of the post
-            // Create a ref with auto-generated ID
             var ref = db.collection('users').doc(followerId).collection('notifications').doc()
             batch.set(ref, {
               created: postData.created,
@@ -93,19 +88,12 @@ exports = module.exports = functions.region('europe-west1').firestore
               user: postData.user, 
               read: false
             });
-          }
-  
+          }  
         });
-      
         // Commit the batch
-        console.log(' - commit the batch')
         return batch.commit();
       })
-      .then(value => {
-        console.log('value: ', value)
-        return true
-      })
       .catch(err => {
-        console.log('Error: ', err);
+        console.error(err);
       });
   })  

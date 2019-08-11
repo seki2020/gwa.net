@@ -2,6 +2,16 @@
 const admin = require('firebase-admin')
 const db = admin.firestore()
 
+function getRandomID(length) {
+  var text = "";
+  var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXUZ";
+
+  for( var i=0; i < length; i++ )
+      text += charset.charAt(Math.floor(Math.random() * charset.length));
+
+  return text;
+}
+
 module.exports.tripsPosts = async function (req, res) {
 
   console.log(`Convert TripsPosts`)
@@ -88,5 +98,49 @@ module.exports.followers = async function (req, res) {
     })
 
     res.send('Converting Followers')
+
+}
+
+module.exports.waypoints = async function (req, res) {
+
+  console.log(`Convert Waypoints`)
+
+  // Get all the TripUsers and recreate as Trips/Followers
+
+  const tripRef = db.collection('trips').doc('qrB8ENTnhsWDtvVVlRCe')
+
+  tripRef.collection('posts').where('type', '==', 90).get()
+    .then(snapshot => {
+
+      var waypoints = []
+      snapshot.forEach(doc => {
+        var data = doc.data()
+
+        // console.log("Source: ", doc.id, " => ", data);
+
+        waypoints.push({
+          id: getRandomID(12),
+          timestamp: data.updated,
+          location: data.location,
+          user: data.user
+        })
+      })
+
+      return tripRef.update({
+        'waypoints': waypoints
+      })
+      // return tripRef.update({
+      //   'waypoints': admin.firestore.FieldValue.arrayUnion(waypoints)
+      // })
+
+    })
+    .then(doc => {
+      console.log('Updated trip')
+    })    
+    .catch(err => {
+      console.log('Error getting documents', err);
+    })
+
+    res.send('Converting Waypoints')
 
 }

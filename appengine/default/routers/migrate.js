@@ -29,6 +29,7 @@ router.get('/', function (req, res) {
 router.get('/trips/:tripUrl', migrate.getTrips)
 router.get('/trips/:tripUrl/posts', migrate.getPosts)
 
+router.get('/convert/waypoints', convert.waypoints)
 router.get('/convert/followers', convert.followers)
 router.get('/convert/trips-posts', convert.tripsPosts)
 

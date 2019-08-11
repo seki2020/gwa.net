@@ -6,8 +6,6 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 exports = module.exports = functions.region('europe-west1').firestore
   .document('trips/{tripId}')
   .onCreate((snapshot, context) => {
-    const tripId = context.params.tripId
-
     // Get an object representing the document
     const data = snapshot.data()
     const userId = data.user.id
@@ -17,12 +15,8 @@ exports = module.exports = functions.region('europe-west1').firestore
     return userRef.update({
         trips: FieldValue.increment(1)
       })    
-      .then(() => {
-        console.log('Done')
-        return true
-      })
       .catch(err => {
-        console.log('Error: ', err);
+        console.error(err);
       })
 
   })  

@@ -1,66 +1,87 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin')
+const db = admin.firestore()
 
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 
-exports = module.exports = functions.region('europe-west1').firestore
-  .document('trips/{tripId}/posts/{postId}')
-  .onDelete((snapshot, context) => {
-    const tripId = context.params.tripId
-    const postId = context.params.postId
+function deletePostFlags(tripId, postId) {
+  return db.collection('trips').doc(tripId).collection('flags').where('post.id', '==', postId).get()
+  .then(snapshot => {
+    var batch = db.batch();
+    snapshot.forEach(doc => {
+      batch.delete(doc.ref)
+    });
+    return batch.commit();         
+  })
+  .catch(err => {
+    console.error(err);
+    return false
+  })  
+}
 
-    var postData = snapshot.data()
-    var lastPostData = {}
-    
-    var recent = {}
-
-    // Get recent posts
-    const db = admin.firestore()
-    const tripRef = db.collection("trips").doc(tripId);
-
-    console.log('get last post')
-    return db.collection('trips').doc(tripId).collection('posts').orderBy('updated', 'desc').limit(1).get()
-      .then(snapshot => {
-        console.log('Got last post')
-        if (!snapshot.empty) {
-          lastPostData = snapshot.docs[0].data()
-
-          recent = {
-            message: lastPostData.message,
-            post: {
-              id: snapshot.docs[0].id,
-              message: lastPostData.message,
-            },
-            user: lastPostData.user,
-            media: lastPostData.media ? lastPostData.media : []
-          }
-        }
-        // Now get the Trip
-        return tripRef.get()
+function deleteNotifications(postId) {
+  return db.collectionGroup('notifications').where('post.id', '==', postId).get()
+    .then(snapshot => {
+      var batch = db.batch()
+      snapshot.forEach(doc => {
+        batch.delete(doc.ref)
       })
-      .then(doc => {
-        console.log('got the trip')
-        if (!doc.exists) {
-          throw new Error('Trip does not exist')
-        }
-        const tripData = doc.data()
+      return batch.commit()
+    }) 
+    .catch(err => {
+      console.error(err);
+      return false
+    })
+}
 
-        // Get the recent 
-        // recent = tripData.recent
+function deleteMedia(tripId, postData) {
+  const config = JSON.parse(process.env.FIREBASE_CONFIG);
+  const storage = admin.storage()
+  const bucketName = config.storageBucket
 
-        // Get the media and remove the 'delete' media if there is any
+  const promises = []
+  const mediaList = postData.media ? postData.media : []
+  for (var j=0; j<mediaList.length; j++) {
+    const media = mediaList[j]    
+    const filename = `trips/${tripId}/images/${media.id}.jpg`
+
+    const p = storage.bucket(bucketName).file(filename).delete()
+    promises.push(p)
+  }
+  return Promise.all(promises)  
+}
+
+function updateTrip(tripId, tripData, postId, postData) {
+  return db.collection('trips').doc(tripId).collection('posts').orderBy('updated', 'desc').limit(1).get()
+    .then(snapshot => {
+      var lastPostData = null
+      var recent = null
+      if (snapshot.empty) {     // The last post is deleted\
+        recent = null
+      }
+      else {
+        lastPostData = snapshot.docs[0].data()    // The last post, we should use this info for the recent, with some images added
+        recent = {
+          message: lastPostData.message,
+          post: {
+            id: snapshot.docs[0].id,
+            message: lastPostData.message,
+          },
+          user: lastPostData.user,
+          media: lastPostData.media ? lastPostData.media : []
+        }        
+      }      
+      if (recent) {
+        // Fix up the Media in the recent
         const tripMedia = tripData.recent && tripData.recent.media ? tripData.recent.media : []
-        const postMedia = postData.media ? postData.media : []
-        const lastPostMedia = recent ? recent.media : []
-        
-        // Remove the postMedia from the tripMedia
-
-        // Take the tripMedia that is not in the postMedia and not in the lastPostMedia
-        var tmpMedia = []
+        const deletedPostMedia = postData.media ? postData.media : []
+        const lastPostMedia = recent && recent.media ? recent.media : []
+          
+        // Take the tripMedia that is not in the postMedia and not in the lastPostMedia and append to recent.media
         for (var i=0; i<tripMedia.length; i++) {
           var found = false
-          for (var j=0; j<postMedia.length; j++) {
-            if (tripMedia[i].id === postMedia[j].id) {
+          for (var j=0; j<deletedPostMedia.length; j++) {
+            if (tripMedia[i].id === deletedPostMedia[j].id) {
               found = true
             }
           }
@@ -70,89 +91,55 @@ exports = module.exports = functions.region('europe-west1').firestore
             }
           }
           if (!found) {
-            tmpMedia.push(tripMedia[i])
+            recent.media.push(tripMedia[i])
           }
         }
-        if (recent) {
-          console.log('Got a recent after image stuff')
-          // make sure there are only 4 items in the recent media
-          for (var l=0; l<tmpMedia.length; l++) {
-            recent.media.push(tmpMedia[l])        // Add all the media we stil have in the trip and is still valid
-          }
-          recent.media = recent.media.slice(0, 4)
-        }
+        // Make sure we only have max 4 media objects
+        recent.media = recent.media.slice(0, 4)
+      }
 
-        // Update the Trip
-        var data = {
-          recent: recent,
-          updated: lastPostData ? lastPostData.updated : tripData.updated,
-          posts: FieldValue.increment(-1)
-        }
-        console.log("go and update the trip", data)
-        return tripRef.update(data)       // Return the promise and continue
+      // Update the Trip
+      var data = {
+        recent: recent,
+        updated: lastPostData ? lastPostData.updated : tripData.updated,
+        posts: FieldValue.increment(-1)
+      }
+      return db.collection('trips').doc(tripId).update(data)       // Return the promise and continue
+    })
+    .catch(err => {
+      console.error(err);
+      return false
+    })
 
+}
+
+exports = module.exports = functions.region('europe-west1').firestore
+  .document('trips/{tripId}/posts/{postId}')
+  .onDelete((snapshot, context) => {
+    const tripId = context.params.tripId
+    const postId = context.params.postId
+
+    var postData = snapshot.data()
+
+    return db.collection("trips").doc(tripId).get()
+      .then(doc => {
+        if (doc.exists) {
+          return updateTrip(tripId, doc.data(), postId, postData)
+        }
+        else {
+          return true
+        }
       })
       .then(() => {
-        console.log('Done with the Trip update, remove the flags')
-
-        return db.collection('trips').doc(tripId).collection('flags').where('post.id', '==', postId).get()
-
-        // return true
-      })
-
-      .then(snapshot => {
-        console.log('Batch the flag deletes')
-        // Once we get the results, begin a batch to delete the flags
-        var batch = db.batch();
-        snapshot.forEach(doc => {
-          batch.delete(doc.ref)
-        });
-  
-        // Commit the batch
-        return batch.commit();         
+        return deletePostFlags(tripId, postId)
       })
       .then(() => {
-        console.log('Done with flag delete, remove the notifications')
-        return db.collectionGroup('notifications').where('post.id', '==', postId).get()
+        return deleteNotifications(postId)
       })
-      .then(snapshot => {
-        console.log('Batch the notification deletes')
-        // Once we get the results, begin a batch to delete the flags
-        var batch = db.batch();
-        snapshot.forEach(doc => {
-          batch.delete(doc.ref)
-        })
-  
-        // Commit the batch
-        return batch.commit();         
-      })
-  
       .then(() => {
-        console.log('Done with notifications delete, remove the images')
-  
-        const config = JSON.parse(process.env.FIREBASE_CONFIG);
-        const storage = admin.storage()
-        const bucketName = config.storageBucket
-      
-        const promises = []
-        const mediaList = postData.media ? postData.media : []
-        for (var j=0; j<mediaList.length; j++) {
-          let media = mediaList[j]
-          
-          const filename = `trips/${tripId}/images/${media.id}.jpg`
-          console.log(' - ', filename)
-      
-          const p = storage.bucket(bucketName).file(filename).delete()
-          promises.push(p)
-        }
-        console.log("- done the looping, go return all promises")
-        return Promise.all(promises)
-
+        return deleteMedia(tripId, postData)
       })
-
       .catch(err => {
-        console.log('Error: ', err);
+        console.error(err);
       })
-  
-
   })  
