@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "followers",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "user.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updated",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "trips",
       "queryScope": "COLLECTION",
       "fields": [
@@ -26,20 +40,6 @@
           "fieldPath": "privacy",
           "order": "ASCENDING"
         },
-        {
-          "fieldPath": "user.id",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "updated",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trips-users",
-      "queryScope": "COLLECTION",
-      "fields": [
         {
           "fieldPath": "user.id",
           "order": "ASCENDING"
@@ -75,8 +75,13 @@
       ]
     },
     {
-      "collectionGroup": "following",
-      "fieldPath": "trip.id",
+      "collectionGroup": "followers",
+      "fieldPath": "recent",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "followers",
+      "fieldPath": "user.id",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -95,6 +100,33 @@
           "queryScope": "COLLECTION_GROUP"
         }
       ]
+    },
+    {
+      "collectionGroup": "notifications",
+      "fieldPath": "post.id",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "arrayConfig": "CONTAINS",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "trips",
+      "fieldPath": "recent",
+      "indexes": []
     }
   ]
 }
