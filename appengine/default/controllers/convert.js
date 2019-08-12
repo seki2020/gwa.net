@@ -2,6 +2,8 @@
 const admin = require('firebase-admin')
 const db = admin.firestore()
 
+const FieldValue = require('firebase-admin').firestore.FieldValue
+
 function getRandomID(length) {
   var text = "";
   var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXUZ";
@@ -120,7 +122,7 @@ module.exports.waypoints = async function (req, res) {
 
         waypoints.push({
           id: getRandomID(12),
-          timestamp: data.updated,
+          date: data.updated,
           location: data.location,
           user: data.user
         })
@@ -142,5 +144,47 @@ module.exports.waypoints = async function (req, res) {
     })
 
     res.send('Converting Waypoints')
+
+}
+
+
+module.exports.timestamps = async function (req, res) {
+
+  console.log(`Convert Timestamps`)
+
+  // Get all the TripUsers and recreate as Trips/Followers
+
+  const tripRef = db.collection('trips').doc('zNQdPUuwLf5nlu2kDhFn')
+
+  tripRef.collection('posts').get()
+    .then(snapshot => {
+
+      var batch = db.batch()
+      snapshot.forEach(doc => {
+        var data = doc.data()
+
+        if (data.type == 90) {
+          batch.delete(doc.ref)
+        }
+        else {
+          batch.update(doc.ref, {
+            date: data.updated,
+            created: FieldValue.delete(),
+            timestamp: FieldValue.delete()
+          })
+        }
+
+      })
+      return batch.commit()
+
+    })
+    .then(doc => {
+      console.log('Updated trip')
+    })    
+    .catch(err => {
+      console.log('Error getting documents', err);
+    })
+
+    res.send('Converting Timestamps')
 
 }

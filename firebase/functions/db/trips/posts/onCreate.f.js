@@ -58,7 +58,7 @@ exports = module.exports = functions.region('europe-west1').firestore
         // Update the Trip
         var data = {
           recent: recent,
-          updated: postData.updated,
+          updated: postData.date,
           countries: countries,
           posts: FieldValue.increment(1)
         }

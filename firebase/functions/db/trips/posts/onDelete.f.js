@@ -101,7 +101,7 @@ function updateTrip(tripId, tripData, postId, postData) {
       // Update the Trip
       var data = {
         recent: recent,
-        updated: lastPostData ? lastPostData.updated : tripData.updated,
+        updated: lastPostData ? lastPostData.date : tripData.updated,
         posts: FieldValue.increment(-1)
       }
       return db.collection('trips').doc(tripId).update(data)       // Return the promise and continue
