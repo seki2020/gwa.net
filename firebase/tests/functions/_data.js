@@ -35,6 +35,7 @@ const followerData = {
 
 const postId = 'AABBCC'
 const postData = {
+  date: admin.firestore.Timestamp.fromDate(new  Date()),
   message: 'Test post',
   timeZone: "Europe/Amsterdam",
   timeZoneOffset: 120,
@@ -46,8 +47,6 @@ const postData = {
     id: userId,
     name: userData.name
   },
-  created: admin.firestore.Timestamp.fromDate(new  Date()),
-  updated: admin.firestore.Timestamp.fromDate(new  Date())
 }
 
 module.exports.userId = userId
