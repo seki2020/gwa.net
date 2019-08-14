@@ -17,6 +17,8 @@ admin.initializeApp({
 const api = require('./routers/api')
 const web = require('./routers/web')
 const migrate = require('./routers/migrate')
+const move = require('./routers/move')
+const exporting = require('./routers/export')
 
 // Middle ware 
 app.use(morgan('common'))
@@ -29,6 +31,8 @@ app.use('/static', express.static('static/static'))
 app.use('/api', api)
 app.use('/web', web)
 app.use('/migrate', migrate)
+app.use('/move', move)
+app.use('/export', exporting)
 
 // For all other urls serve static/index.html. So we can type URLs
 app.get('/*', (req, res) => {
