@@ -85,6 +85,7 @@ module.exports.getTrips = async function (req, res) {
               location: new admin.firestore.GeoPoint(trip.until.location.lat, trip.until.location.lon)
             }
           },
+          created: admin.firestore.Timestamp.fromDate(new  Date(trip.from.date + 'Z')),
           user: user
         }
         // Add a new document with a generated id.
@@ -108,12 +109,11 @@ module.exports.getTrips = async function (req, res) {
           id: ref.id,
           name: trip.name
         },
-        updated: admin.firestore.Timestamp.fromDate(new  Date(trip.until.date + 'Z'))
+        created: admin.firestore.Timestamp.fromDate(new  Date(trip.from.date + 'Z')),
+        updated: admin.firestore.Timestamp.fromDate(new  Date(trip.from.date + 'Z'))
       }
-      // var uid = ref.id + '_' + user.id
       
       return db.collection('trips').doc(ref.id).collection('followers').doc(user.id).set(data)
-      // return db.collection('trips-users').doc(uid).set(data)
 
     })
     .then(async (ref) => {
@@ -191,8 +191,8 @@ module.exports.getPosts = async function (req, res) {
 
           data = {
             message: post.title,
-            created: admin.firestore.Timestamp.fromDate(new  Date(post.date + 'Z')),
-            updated: admin.firestore.Timestamp.fromDate(new  Date(post.date + 'Z')),
+            date: admin.firestore.Timestamp.fromDate(new  Date(post.date + 'Z')),
+            // updated: admin.firestore.Timestamp.fromDate(new  Date(post.date + 'Z')),
             source: post.source,
             reference: post.reference,
             timeZoneOffet: post.tz_offset,

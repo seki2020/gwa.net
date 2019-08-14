@@ -44,7 +44,8 @@ service cloud.firestore {
     match /trips/{tripId} {
       allow read: if request.auth.uid == resource.data.user.id || resource.data.privacy == 2; 
       allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request)
-      allow create: if request.auth.uid == request.resource.data.user.id;
+      allow create: if request.auth.uid == request.resource.data.user.id
+      allow delete: if request.auth.uid == resource.data.user.id
 
       match /followers/{userId} {
         // Only read followers that is you or are from public trips, or trips you own

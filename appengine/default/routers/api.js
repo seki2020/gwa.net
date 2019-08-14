@@ -3,8 +3,6 @@ const admin = require('firebase-admin')
 const router = express.Router()
 
 const usersMedia = require('../controllers/users/media')
-
-const trips = require('../controllers/trips/trips')
 const tripsMedia = require('../controllers/trips/media')
 const places = require('../controllers/places/places')
 
@@ -39,6 +37,5 @@ router.get('/users/:imageId.jpg', usersMedia.getImage)
 
 // Trips
 router.get('/trips/:tripId/images/:imageId.jpg', tripsMedia.getImage)
-router.delete('/trips/:tripId', trips.tripDelete)
 
 module.exports = router
