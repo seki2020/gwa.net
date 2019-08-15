@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
   res.json({"environment": 'foo'})  
 })
 
-router.get('/trips/:tripUrl', move.getTrips)
-router.get('/trips/:tripUrl/posts', move.getPosts)
+router.get('/trips/:tripId', move.getTrips)
+router.get('/trips/:tripId/posts', move.getPosts)
 
 module.exports = router

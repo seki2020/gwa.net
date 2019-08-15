@@ -21,7 +21,7 @@ const move = require('./routers/move')
 const exporting = require('./routers/export')
 
 // Middle ware 
-app.use(morgan('common'))
+// app.use(morgan('common'))
 
 // Locally serve static files
 app.use('/static', express.static('static/static'))

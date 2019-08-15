@@ -25,6 +25,7 @@ exports = module.exports = functions.region('europe-west1').firestore
           'recent': newDocument.recent ? newDocument.recent : null,
           'privacy': newDocument.privacy,
           'trip.name': newDocument.name,
+          'updated': newDocument.updated
         }
   
         // Once we get the results, begin a batch

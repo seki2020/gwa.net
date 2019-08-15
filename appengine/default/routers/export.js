@@ -9,6 +9,6 @@ router.get('/', function (req, res) {
 })
 
 router.get('/trips/:tripId', exporting.getTrips)
-// router.get('/trips/:tripUrl/posts', exporting.getPosts)
+router.get('/trips/:tripId/posts', exporting.getPosts)
 
 module.exports = router
