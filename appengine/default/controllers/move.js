@@ -35,8 +35,8 @@ function getRandomID(length) {
   return text;
 }
 
-// const remoteUrl = 'https://gwa-net.appspot.com/export/trips/' 
-const remoteBaseUrl = 'http://localhost:8081/' 
+const remoteBaseUrl = 'https://gwa-net.appspot.com/' 
+// const remoteBaseUrl = 'http://localhost:8081/' 
 const remoteUrl = remoteBaseUrl + 'export/trips/' 
 
 
@@ -51,7 +51,7 @@ module.exports.getTrips = async function (req, res) {
   const response = await got(remoteUrl + tripId, {json: true})
   const trip = response.body["trip"]
 
-  var newTripId = tripId + '_x'
+  var newTripId = tripId // + '_x'
 
   // Check if trip already exists
   const tripRef = db.collection('trips').doc(newTripId)
@@ -166,7 +166,7 @@ module.exports.getPosts = async function (req, res) {
   }
   console.log(` - Get data: ${rUrl}`)
 
-  var newTripId = tripId + '_x'
+  var newTripId = tripId  //+ '_x'
 
   // Get remote data to migrate
   const response = await got(rUrl, {json: true})
@@ -176,7 +176,7 @@ module.exports.getPosts = async function (req, res) {
   if (posts.length > 0) {
     const post = posts[0]       // Asume 1 post
     const postId = post.id
-    const newPostId = postId + '_x'
+    const newPostId = postId  //+ '_x'
 
     var trip = {}
 
@@ -218,8 +218,8 @@ module.exports.getPosts = async function (req, res) {
             data.place = {
               name: post.place.name,
               description: post.place.description,
-              address: post.place.address,
-              city: post.place.city,
+              address: post.place.address ? post.place.address : "",
+              city: post.place.city ? post.place.city : "",
               country: post.place.country,
               location: new admin.firestore.GeoPoint(post.place.location._latitude, post.place.location._longitude)
             }
