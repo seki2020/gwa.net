@@ -9,28 +9,28 @@ const places = require('../controllers/places/places')
 // Test, later to the bottom
 router.get('/places/nearby', places.nearBy)
 
-// router.use((req, res, next) => {
-//   // Get Auth Header value
-//   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') { 
-//     const idToken = req.headers.authorization.split(' ')[1];
+router.use((req, res, next) => {
+  // Get Auth Header value
+  if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') { 
+    const idToken = req.headers.authorization.split(' ')[1];
 
-//     // Verify the token
-//     admin.auth().verifyIdToken(idToken)
-//     .then((decodedToken) => {
-//       req.token = decodedToken
-//       next()
+    // Verify the token
+    admin.auth().verifyIdToken(idToken)
+    .then((decodedToken) => {
+      req.token = decodedToken
+      next()
 
-//     }).catch((error) => {
-//       // Handle error
-//       console.log(`- Trouble verifying the token: ${error}`)
-//       res.sendStatus(403)
-//     });    
-//   }
-//   else {
-//     console.log(`- No Bearer token`)
-//     res.sendStatus(403)
-//   }
-// })
+    }).catch((error) => {
+      // Handle error
+      console.log(`- Trouble verifying the token: ${error}`)
+      res.sendStatus(403)
+    });    
+  }
+  else {
+    console.log(`- No Bearer token`)
+    res.sendStatus(403)
+  }
+})
 
 // Users
 router.get('/users/:imageId.jpg', usersMedia.getImage)
