@@ -4,21 +4,35 @@
       <h1 class="title has-text-centered">Going Walkabout</h1>
       <div class="container">
         <div v-for="row in grid" :key="row.key" class="columns">
-          <div v-for="(column, index) in row.columns" :key="column.content.key" class="column is-half" :data-aos="index === 0 ? 'fade-right': 'fade-left'" data-aos-once="true">
+          <div v-for="(column, index) in row.columns" :key="column.content.key" class="column is-one-quarter" :data-aos="index === 0 ? 'fade-right': 'fade-left'" data-aos-once="true">
             <div class="card">
               <div class="card-header">
-                <div class="card-header-title">
+                <div class="card-header-title" style="display: inline-block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" >
                   {{column.content.title}}
                 </div>
               </div>
               <div class="card-image">
                 <div class="video-responsive">
-                  <iframe width="560" height="315" :src="'https://www.youtube-nocookie.com/embed/' + column.content.key" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <!-- <iframe width="560" height="315" :src="'https://www.youtube-nocookie.com/embed/' + column.content.key" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
                 </div>
+              </div>
+              <div class="card-content">
+                <button class="button" v-on:click="showDialog(column.content.key)">Show the video</button>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="modal" :class="{ 'is-active': dialogVisible }">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <!-- Any other Bulma elements you want -->
+          <p>Here should the Youtube video be shown</p>
+          <div class="video-responsive" v-show="currentVideo">
+            <iframe width="560" height="315" :src="'https://www.youtube-nocookie.com/embed/' + currentVideo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" @click="dialogVisible=false; currentVideo=null"></button>
       </div>
     </section>
     <x-footer></x-footer>
@@ -51,19 +65,22 @@ export default {
   data () {
     return {
       videos: [],
-      grid: []
+      grid: [],
+      dialogVisible: false,
+      currentVideo: null
     }
   },
   created () {
     Storyblok.get(`cdn/stories`, {
       version: 'draft',
       starts_with: locale + 'videos/',
+      per_page: 50,
       sort_by: 'content.date:asc'
     }).then(response => {
       this.videos = response.data.stories
 
       // Process in grid format
-      const cols = 2
+      const cols = 4
       var row = 0
       var rows = []
       var columns = []
@@ -82,7 +99,15 @@ export default {
     }).catch(error => {
       console.log(error)
     })
+  },
+  methods: {
+    showDialog: function (key) {
+      console.log('Show dialog: ', key)
+      this.currentVideo = key
+      this.dialogVisible = true
+    }
   }
+
 }
 
 </script>

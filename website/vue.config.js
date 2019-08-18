@@ -11,6 +11,7 @@ module.exports = {
   outputDir: '../appengine/default/static',
   assetsDir: 'static',
   devServer: {
+    port: 8080,
     proxy: 'http://localhost:8081'
   }
 }
