@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { translate as _ } from '@/system/translator'
+import api from '../../system/api'
 
 export default {
   name: 'flags',
@@ -36,10 +36,8 @@ export default {
     }
   },
   async created () {
-    console.log('do stuff')
-    axios.get('/web/management/flags')
+    api.get('/web/management/flags')
       .then(response => {
-        console.log(response)
         this.flags = response.data.flags
       })
       .catch(err => {

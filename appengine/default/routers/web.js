@@ -3,6 +3,8 @@ const admin = require('firebase-admin')
 var router = express.Router()
 
 const base = require('../controllers/management/base')
+const users = require('../controllers/management/users')
+const trips = require('../controllers/management/trips')
 const flags = require('../controllers/management/flags')
 
 router.use((req, res, next) => {
@@ -29,6 +31,8 @@ router.use((req, res, next) => {
 })
 
 router.get('/management/', base.getPermissions)
+router.get('/management/users', users.getUsers)
+router.get('/management/trips', trips.getTrips)
 router.get('/management/flags', flags.getFlags)
 
 module.exports = router
