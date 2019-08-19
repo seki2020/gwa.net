@@ -31,9 +31,11 @@ new Vue({
       if (user) {
         console.log(' - App: user: ' + user.uid + ', ' + user.displayName)
         this.$store.commit('authenticate')
+        // this.$store.dispatch('setUser', user)
       } else {
         console.log(' - App: NO User')
         this.$store.commit('deauthenticate')
+        // this.$store.dispatch('setUser', null)
       }
     })
   },

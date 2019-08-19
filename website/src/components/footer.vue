@@ -23,6 +23,7 @@
         <div><i class="far fa-copyright"></i> Aadjemonkeyrock 2011 - {{year}} - <router-link to="/privacy">{{ _('Privacy statement') }}</router-link></div>
       </div>
     </div>
+    <!-- <div><router-link to="/management">{{ _('Management') }}</router-link></div> -->
   </footer>
 </template>
 

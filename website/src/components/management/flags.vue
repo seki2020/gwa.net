@@ -37,7 +37,7 @@ export default {
   },
   async created () {
     console.log('do stuff')
-    axios.get('/web/flags')
+    axios.get('/web/management/flags')
       .then(response => {
         console.log(response)
         this.flags = response.data.flags

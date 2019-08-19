@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="section" v-if="isAuthenticated">
+    <div class="section" v-if="isAuthenticated && isAuthorized">
       <div class="container is-fullhd">
         <div class="columns">
           <div class="column is-one-quarter">
@@ -42,16 +42,45 @@
 
 <script>
 import XHeader from '@/components/header'
+import firebase from 'firebase/app'
+import axios from 'axios'
 
 export default {
   name: 'management',
   components: {
     'x-header': XHeader
   },
-  computed: {
+  data () {
+    return {
+      isAuthorized: false
+    }
+  },  computed: {
     isAuthenticated () {
       return this.$store.state.authenticated
     }
+  },
+  created () {
+    // console.log('create management')
+//     var user = firebase.auth().currentUser;
+//     // console.log(user)
+//     user.getIdToken()
+//       .then((token) => {
+//           const options = {
+//             headers: {'Authorization': 'Bearer ' + token}
+//           };
+          
+//           return axios.get('/web/management/', options)
+//       })
+
+// //     axios.get('/web/management/')
+//       .then(response => {
+//         console.log(response.data)
+//         this.isAuthorized = response.data.permissions
+//       })
+//       .catch(err => {
+//         console.log(err)
+//       })
+
   }
 }
 

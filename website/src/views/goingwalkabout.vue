@@ -12,12 +12,12 @@
                 </div>
               </div>
               <div class="card-image">
-                <div class="video-responsive">
-                  <!-- <iframe width="560" height="315" :src="'https://www.youtube-nocookie.com/embed/' + column.content.key" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+                <figure class="image is-16by9" >
+                    <img :src="'https://img.youtube.com/vi/' + column.content.key + '/mqdefault.jpg'" :alt="column.content.title">
+                </figure>
+                <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: center; cursor: pointer;" @click="showDialog(column.content.key)">
+                    <div class="video-play" style="height: 40px; width: 40px"></div>
                 </div>
-              </div>
-              <div class="card-content">
-                <button class="button" v-on:click="showDialog(column.content.key)">Show the video</button>
               </div>
             </div>
           </div>
@@ -26,8 +26,6 @@
       <div class="modal" :class="{ 'is-active': dialogVisible }">
         <div class="modal-background"></div>
         <div class="modal-content">
-          <!-- Any other Bulma elements you want -->
-          <p>Here should the Youtube video be shown</p>
           <div class="video-responsive" v-show="currentVideo">
             <iframe width="560" height="315" :src="'https://www.youtube-nocookie.com/embed/' + currentVideo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
