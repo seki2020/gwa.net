@@ -78,7 +78,7 @@ exports = module.exports = functions.region('europe-west1').firestore
           if (followerId !== userId) {      // Don't create a notification for the author of the post
             var ref = db.collection('users').doc(followerId).collection('notifications').doc()
             batch.set(ref, {
-              created: postData.created,
+              created: postData.date,
               type: 10,
               trip: postData.trip,
               post: {
