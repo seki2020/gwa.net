@@ -6,3 +6,9 @@
   background-size: cover;
   background-color: #999;
 }
+
+@media screen and (max-width: 480px) {
+  .header-image {
+    background-image: url("./assets/header-narrow-small.jpg");
+  }
+}
