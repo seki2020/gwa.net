@@ -5,7 +5,6 @@
        <p class="content has-text-centered">{{ _('One day a week I work on Going Walkabout, a mobile travel diary. I love to travel and go to new places, part of traveling is sharing experiences and capturing memories. None of the existing solutions fulfill my needs and now it\'s time to do something about it. I document the progress on YouTube, you see me making functional and technical decisions, implement and test the functionality. It gives you insights in what needs to be done when creating an app.')}}</p>
        <p class="content"></p>
      </div>
-
      <div class="container is-fullhd">
       <div class="columns">
         <div v-for="(video, index) in videos" :key="video.id" class="column" :data-aos="zooms[index]" data-aos-once="true">

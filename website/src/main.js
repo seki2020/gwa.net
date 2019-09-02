@@ -14,6 +14,8 @@ import 'cookieconsent'
 import Formatting from './system/formatting'
 import { translate as _ } from './system/translator'
 
+import { jarallax } from 'jarallax'
+
 firebase.initializeApp(result)
 // const auth = app.auth()
 
@@ -67,4 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
   }
+})
+
+jarallax(document.querySelectorAll('.jarallax'), {
+  speed: 0.6
 })

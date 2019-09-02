@@ -47,6 +47,9 @@ $footer-background-color: lighten( $primary, 60% );
 // Cookie Consent
 @import "~cookieconsent/build/cookieconsent.min.css";
 
+// Jarallax
+@import "~jarallax/dist/jarallax.css";
+
 @import "main.scss";
 @import "header.scss";
 @import "footer.scss";

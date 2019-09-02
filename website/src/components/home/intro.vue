@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-large is-primary is-fullheight header-image">
+  <section class="hero is-large is-primary is-fullheight header-image jarallax">
     <div class="hero-body">
       <div class="container has-text-centered">
         <h1 class="title is-size-1">Going Walkabout</h1>
