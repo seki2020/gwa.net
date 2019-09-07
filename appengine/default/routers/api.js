@@ -6,9 +6,6 @@ const usersMedia = require('../controllers/users/media')
 const tripsMedia = require('../controllers/trips/media')
 const places = require('../controllers/places/places')
 
-// Test, later to the bottom
-router.get('/places/nearby', places.nearBy)
-
 router.use((req, res, next) => {
   // Get Auth Header value
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') { 
@@ -34,8 +31,10 @@ router.use((req, res, next) => {
 
 // Users
 router.get('/users/:imageId.jpg', usersMedia.getImage)
-
 // Trips
 router.get('/trips/:tripId/images/:imageId.jpg', tripsMedia.getImage)
+// Places
+router.get('/places/nearby', places.nearBy)
+
 
 module.exports = router
