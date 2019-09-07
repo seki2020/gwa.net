@@ -7,6 +7,7 @@ module.exports.nearBy = async function (req, res) {
     return res.end()
   }
 
+  console.log("Get places")
   // Call remote to get nearby locations
   let places = []
 
@@ -19,14 +20,14 @@ module.exports.nearBy = async function (req, res) {
       venues.forEach(venue => {
         places.push({
           'name': venue.name,
-          'address': venue.location.address,
-          'city': venue.location.city,
-          'country': venue.location.cc,
+          'address': venue.location.address ? venue.location.address : "",
+          'city': venue.location.city ? venue.location.city : "",
+          'country': venue.location.cc ? venue.location.cc : "",
           'location': {
             'latitude': venue.location.lat,
             'longitude': venue.location.lng
           },
-          'distance': venue.location.distance
+          'distance': venue.location.distance ? venue.location.distance : 0,
         })
       })
     }
