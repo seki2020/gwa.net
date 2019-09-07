@@ -23,8 +23,8 @@ module.exports.nearBy = async function (req, res) {
           'city': venue.location.city,
           'country': venue.location.cc,
           'location': {
-            'lat': venue.location.lat,
-            'lng': venue.location.lng
+            'latitude': venue.location.lat,
+            'longitude': venue.location.lng
           },
           'distance': venue.location.distance
         })
