@@ -33,7 +33,7 @@ export default {
       .then(response => {
         let story = response.data.story
 
-        this.text = marked(story.content.text, { sanitize: true })
+        this.text = marked(story.content.text)
       }).catch(error => {
         console.log(error)
       })

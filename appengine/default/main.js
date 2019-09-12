@@ -36,6 +36,26 @@ app.use('/export', exporting)
 
 // For all other urls serve static/index.html. So we can type URLs
 app.get('/*', (req, res) => {
+
+  // # self.response.headers['Content-Security-Policy-Report-Only'] = \
+  // # self.response.headers['Content-Security-Policy'] = \
+  const rules = "default-src 'self' https://fonts.gstatic.com; \
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; \
+    connect-src 'self' https://api.storyblok.com; \
+    img-src 'self' https://img.youtube.com https://www.google-analytics.com; "
+
+  res.set({
+    // 'Content-Security-Policy-Report-Only': rules,
+    'Content-Security-Policy': rules,
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'same-origin',
+    'Feature-Policy': "camera 'none'; microphone 'none'"
+  })
+
   res.sendFile(path.join(__dirname + '/static/index.html'))
 });
 
