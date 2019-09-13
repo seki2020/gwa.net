@@ -42,7 +42,7 @@ app.get('/*', (req, res) => {
   const rules = "default-src 'self' https://fonts.gstatic.com; \
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
     script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; \
-    connect-src 'self' https://api.storyblok.com; \
+    connect-src 'self' https://*.googleapis.com https://api.storyblok.com; \
     img-src 'self' https://img.youtube.com https://www.google-analytics.com; "
 
   res.set({
