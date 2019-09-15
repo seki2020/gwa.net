@@ -1,6 +1,6 @@
 # Privacy Policy
 
-The party responsible for the processing of your Personal Data is Aadjemonkeyrock. (owner of Going Walkabout and hereafter referred to as "Going Walkabout", "we", "us" or "our"), established and existing under the laws of the Netherlands,registered with the Chamber of Commerce in the Netherlands under 52493245.
+The party responsible for the processing of your Personal Data is Aadjemonkeyrock. (owner of Going Walkabout and hereafter referred to as "Going Walkabout", "we", "us" or "our"), established and existing under the laws of the Netherlands, registered with the Chamber of Commerce in the Netherlands under 52493245.
 
 Going Walkabout is a Travel Diary mobile application and website for capturing your travel memories (collectively, the “Service”). We are committed to by transparent with you about our data practices. 
 
@@ -132,7 +132,7 @@ If Going Walkabout, or substantially all of its assets, were acquired, or in the
 Under certain circumstances, Going Walkabout may be required to disclose your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency).
 
 ### Legal Requirements
-Esplorio Limited may disclose your Personal Data in the good faith belief that such action is necessary to:
+Going Walkabout may disclose your Personal Data in the good faith belief that such action is necessary to:
 - To comply with a legal obligation
 - To protect and defend the rights or property of Going Walkabout
 - To prevent or investigate possible wrongdoing in connection with the Service

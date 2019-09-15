@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/home'
 import Login from './views/system/login'
+import Terms from './views/terms'
 import Privacy from './views/privacy'
 import Auth from './views/auth'
 import GoingWalkabout from './views/goingwalkabout'
@@ -20,6 +21,9 @@ export default new Router({
     },
     {
       path: '/goingwalkabout', name: 'goingwalkabout', component: GoingWalkabout
+    },
+    {
+      path: '/terms', name: 'terms', component: Terms
     },
     {
       path: '/privacy', name: 'privacy', component: Privacy

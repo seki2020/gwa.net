@@ -20,7 +20,7 @@
       </div>
       <div class="column has-text-centered">
         <div style="margin-bottom: 20px;">{{ _('Made with') }} <strong><a href="https://bulma.io" target="_blank">Bulma</a></strong> {{ _('and') }} <a href="https://vuejs.org" target="_blank"><strong>Vue</strong></a>, {{ _('hosted on') }} <a href="https://cloud.google.com/appengine/" target="_blank"><strong>Google AppEngine</strong></a></div>
-        <div><i class="far fa-copyright"></i> Aadjemonkeyrock 2011 - {{year}} - <router-link to="/privacy">{{ _('Privacy statement') }}</router-link></div>
+        <div><i class="far fa-copyright"></i> Aadjemonkeyrock {{year}} - <router-link to="/terms">{{ _('Terms') }}</router-link> - <router-link to="/privacy">{{ _('Privacy') }}</router-link></div>
       </div>
     </div>
     <!-- <div><router-link to="/management">{{ _('Management') }}</router-link></div> -->
