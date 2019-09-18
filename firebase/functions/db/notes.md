@@ -30,7 +30,7 @@ For Trips the following:
 - Update:
   - If isDirty(name) -> Update the users/following
   - If isDirty(recent) -> Update the users/following
-  - If isDirty(privacy) -> Update the users/following
+  - If isDirty(shared) -> Update the users/following
 - Delete:
   - Update User.trips -1
   - Should clean up all the Trip related stuff

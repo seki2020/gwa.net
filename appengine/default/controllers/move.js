@@ -67,7 +67,7 @@ module.exports.getTrips = async function (req, res) {
           description: trip.description,
           // url: trip.url,
           featured: false,
-          privacy: 0,
+          shared: false,
           followers: 0,
           start: {
             date: admin.firestore.Timestamp.fromDate(new  Date(trip.start.date)),

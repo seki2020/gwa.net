@@ -34,7 +34,7 @@ const mockData = {
   },
 
   'trips/public': {
-    privacy: 2,
+    shared: true,
     user: {
       id: 'other'
     }

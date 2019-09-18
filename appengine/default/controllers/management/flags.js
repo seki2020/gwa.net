@@ -4,7 +4,7 @@ const db = admin.firestore()
 const storage = admin.storage()
 
 module.exports.getFlags = async function (req, res) {
-  console.log(`Get Flags`)
+  // console.log(`Get Flags`)
 
   let flags = db.collectionGroup('flags').orderBy('created', 'desc').limit(100)
   flags.get().then(function(querySnapshot) {

@@ -12,7 +12,7 @@ exports = module.exports = functions.region('europe-west1').firestore
 
     const isDirtyRecent = isPropDirty('recent', oldDocument, newDocument) 
     const isDirtyName = isPropDirty('name', oldDocument, newDocument) 
-    const isDirtyPrivate = isPropDirty('privacy', oldDocument, newDocument) 
+    const isDirtyPrivate = isPropDirty('shared', oldDocument, newDocument) 
     
     if (newDocument.deleted || (!isDirtyRecent && !isDirtyName && !isDirtyPrivate)) {
       return true
@@ -23,7 +23,7 @@ exports = module.exports = functions.region('europe-west1').firestore
       .then(snapshot => {
         var data = {
           'recent': newDocument.recent ? newDocument.recent : null,
-          'privacy': newDocument.privacy,
+          'shared': newDocument.shared,
           'trip.name': newDocument.name,
           'updated': newDocument.updated
         }

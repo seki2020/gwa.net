@@ -1,5 +1,5 @@
 // import { getLocale } from '../locale'
-import { parse, format } from 'date-fns'
+import { parseISO, format } from 'date-fns'
 
 export function formatDate (date, long) {
   if (!date) {
@@ -8,5 +8,5 @@ export function formatDate (date, long) {
   // Very simple function for now, later deal with locales
   // console.log('dates', getLocale())
 
-  return format(parse(date), 'DD-MM-YYYY')
+  return format(parseISO(date), 'dd-MM-yyyy')
 }

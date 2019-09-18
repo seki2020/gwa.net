@@ -9,7 +9,7 @@ const userData = {
 const tripId = 'TXt1XIvqUDzBP6T11xTF'
 const tripData = {
   name: 'Latest Test Trip',
-  privacy: 2,
+  shared: true,
   user: {
     id: userId,
     name: userData.name
@@ -22,7 +22,7 @@ const followerData = {
   trip: {
     id: tripId,
     name: tripData.name,
-    privacy: tripData.privacy
+    shared: tripData.shared
   },
   user : {
     id: userId,

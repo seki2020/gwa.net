@@ -22,7 +22,7 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/trips/$(tripId)).data
     }
     function isTripPublic(tripId) {
-      return getTripData(tripId).privacy == 2 && request.auth.uid != null
+      return getTripData(tripId).shared == true && request.auth.uid != null
     }
     function isTripOwner(tripId) {
       return getTripData(tripId).user.id == request.auth.uid 
@@ -42,7 +42,7 @@ service cloud.firestore {
 
     // Trips
     match /trips/{tripId} {
-      allow read: if request.auth.uid == resource.data.user.id || resource.data.privacy == 2; 
+      allow read: if request.auth.uid == resource.data.user.id || resource.data.shared == true; 
       allow update: if request.auth.uid == resource.data.user.id && matchUser(resource, request)
       allow create: if request.auth.uid == request.resource.data.user.id
       allow delete: if request.auth.uid == resource.data.user.id

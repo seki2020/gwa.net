@@ -13,9 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "firebase-admin": "^8.3.0",
+    "firebase-admin": "^8.5.0",
     "got": "^9.6.0",
-    "luxon": "^1.17.2",
+    "luxon": "^1.17.3",
     "morgan": "^1.9.1",
     "serve-favicon": "^2.5.0"
   }

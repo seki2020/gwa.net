@@ -23,7 +23,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "privacy",
+          "fieldPath": "shared",
           "order": "ASCENDING"
         },
         {
@@ -37,7 +37,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "privacy",
+          "fieldPath": "shared",
           "order": "ASCENDING"
         },
         {

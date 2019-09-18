@@ -5,8 +5,8 @@
         <tr>
           <th>{{_('Created')}}</th>
           <th>{{_('Name')}}</th>
+          <th>{{_('Public')}}</th>
           <th>{{_('Featured')}}</th>
-          <th>{{_('Privacy')}}</th>
           <th>{{_('Followers')}}</th>
           <th>{{_('Posts')}}</th>
         </tr>
@@ -15,8 +15,8 @@
         <tr v-for="trip in trips" :key="trip.id">
           <td>{{trip.created | formatDate}}</td>
           <td>{{trip.name}}</td>
+          <td>{{trip.shared}}</td>
           <td>{{trip.featured}}</td>
-          <td>{{trip.privacy}}</td>
           <td>{{trip.followers}}</td>
           <td>{{trip.posts}}</td>
         </tr>

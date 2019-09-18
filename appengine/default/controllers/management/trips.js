@@ -20,8 +20,8 @@ module.exports.getTrips = async function (req, res) {
       let result = {
         'id': doc.id,
         'name': doc.name,
+        'shared': doc.shared,
         'featured': doc.featured,
-        'privacy': doc.privacy,
         'followers': doc.followers,
         'posts': doc.posts,
         'created': doc.created.toDate(),

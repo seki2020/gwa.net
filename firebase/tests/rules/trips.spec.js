@@ -19,7 +19,7 @@ const mockData = {
     user: {
       id: 'me'
     },
-    privacy: 2
+    shared: true
   }
 };
 
