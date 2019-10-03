@@ -9,10 +9,26 @@ exports = module.exports = functions.region('europe-west1').firestore
     const tripId = context.params.tripId
 
     const db = admin.firestore()
+
+    const followerRef = snapshot.ref
+
     const tripRef = db.collection("trips").doc(tripId);
-    return tripRef.update({
-        followers: FieldValue.increment(1)
-      })    
+    return tripRef.get()
+      .then(doc => {
+        const tripData = doc.data()
+
+        // Update the Follower
+        return followerRef.update({
+          'trip.name': tripData.name,
+          recent: tripData.recent,
+          updated: tripData.updated,
+        })       
+      })
+      .then(() => {
+        return tripRef.update({
+          followers: FieldValue.increment(1)
+        })    
+      })  
       .catch(err => {
         console.error(err);
       })
