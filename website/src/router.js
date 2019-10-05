@@ -4,6 +4,7 @@ import Home from './views/home'
 import Login from './views/system/login'
 import Terms from './views/terms'
 import Privacy from './views/privacy'
+import Links from './views/links'
 import Auth from './views/auth'
 import GoingWalkabout from './views/goingwalkabout'
 
@@ -30,6 +31,9 @@ export default new Router({
     },
     {
       path: '/auth/action', name: 'auth', component: Auth
+    },
+    {
+      path: '/links/invites', name: 'links', component: Links
     },
     {
       path: '/management',
