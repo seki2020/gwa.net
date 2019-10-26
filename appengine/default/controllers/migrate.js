@@ -10,6 +10,8 @@ const {promisify} = require('util')
 
 const {DateTime} = require('luxon')
 
+const html2text = require('html2plaintext')
+
 const user = {
   id: config.adminUserId,
   name: "Aad"
@@ -189,8 +191,15 @@ module.exports.getPosts = async function (req, res) {
         if (snapshot.empty) {
           console.log('   + go and create the post')
 
+          // Build the post message
+          // If there is a body, used it, but html sanatized else use the title
+          let message = post.title
+          if (post.body != undefined && post.body.length > 0) {
+            message = message + ' - ' + html2text(post.body)
+          }
+
           data = {
-            message: post.title,
+            message: message,
             date: admin.firestore.Timestamp.fromDate(new  Date(post.date + 'Z')),
             // updated: admin.firestore.Timestamp.fromDate(new  Date(post.date + 'Z')),
             source: post.source,
