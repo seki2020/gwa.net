@@ -4,7 +4,7 @@
       <div class="box">
         <h3 class="title has-text-grey">Register</h3>
         <form>
-          <div class="field">
+          <!-- <div class="field">
             <p class="control has-icons-left has-icons-right">
               <input type="text" name="name" class="input is-medium" :class="{'is-danger': errors.has('name') }" placeholder="Name" v-model="name" v-validate="'required'">
               <span class="icon is-left">
@@ -41,7 +41,7 @@
             </div>
           </div>
           <a class="button is-block is-info is-medium" :disabled="errors.any() || !isComplete" v-on:click="register">Register with email</a>
-          <div style="margin-top: 10px;">Already have an account? <router-link to="/login">Log in</router-link></div>
+          <div style="margin-top: 10px;">Already have an account? <router-link to="/login">Log in</router-link></div> -->
 
         </form>
         <!-- separator -->
@@ -66,28 +66,28 @@ export default {
     };
   },
   computed: {
-    isComplete () {
-      return this.name && this.password && this.email;
-    },
-    hasErrors: function() {
-      var errors = this.$validator.errors
-      return errors.has('name') || errors.has('email') || errors.has('password') || this.message
-    },
-    errorMessage: function() {
-      var errors = this.$validator.errors
-      if (errors.has('name')) {
-        return errors.first('name')
-      }
-      else if (errors.has('email')) {
-        return errors.first('email')
-      }
-      else if (errors.has('password')) {
-        return errors.first('password')
-      }
-      else if (this.message) {
-        return this.message
-      }
-    }
+    // isComplete () {
+    //   return this.name && this.password && this.email;
+    // },
+    // hasErrors: function() {
+    //   var errors = this.$validator.errors
+    //   return errors.has('name') || errors.has('email') || errors.has('password') || this.message
+    // },
+    // errorMessage: function() {
+    //   var errors = this.$validator.errors
+    //   if (errors.has('name')) {
+    //     return errors.first('name')
+    //   }
+    //   else if (errors.has('email')) {
+    //     return errors.first('email')
+    //   }
+    //   else if (errors.has('password')) {
+    //     return errors.first('password')
+    //   }
+    //   else if (this.message) {
+    //     return this.message
+    //   }
+    // }
   },
   methods: {
     register: function() {

@@ -3,7 +3,7 @@ import App from './app.vue'
 import router from './router'
 import store from './store'
 
-import Validate from 'vee-validate'
+// import Validate from 'vee-validate'
 
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -20,7 +20,7 @@ firebase.initializeApp(result)
 // const auth = app.auth()
 
 Vue.config.productionTip = false
-Vue.use(Validate)
+// Vue.use(Validate)
 Vue.use(Formatting)
 Vue.prototype._ = _
 
