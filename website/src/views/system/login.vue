@@ -6,34 +6,33 @@
           <div class="column is-offset-3 is-6" style="padding-bottom: 60px;">
             <div class="box">
               <h3 class="title has-text-centered has-text-grey">{{ _("Login")}}</h3>
-              <validation-observer ref="observer" v-slot="{ valid }">
+              <!-- <validation-observer ref="observer" v-slot="{ valid }"> -->
               <form>
                 <div class="field">
                   <div class="control has-icons-left has-icons-right">
-                    <validation-provider ref="email" :name="_('Email')" rules="required|email" v-slot="{ valid }">
+                    <!-- <validation-provider ref="email" :name="_('Email')" rules="required|email" v-slot="{ valid }"> -->
                     <input type="email" name="email" class="input is-medium"  :placeholder="_('Email')" v-model.lazy="email" >
                     <span class="icon is-left">
                       <i class="fas fa-envelope"></i>
                     </span>
-                    <span v-show="valid" class="icon is-right" >
+                    <span v-show="false" class="icon is-right" >
                       <i class="fas fa-check"></i>
                     </span>
                     <!-- <span>valid: {{valid}} - {{ errors[0]}}</span> -->
-                    </validation-provider>
                   </div>
                 </div>
                 <div class="field">
                   <div class="control has-icons-left has-icons-right">
-                    <validation-provider ref="password" :name="_('Password')" rules="required|min:6" v-slot="{ valid }">
+                    <!-- <validation-provider ref="password" :name="_('Password')" rules="required|min:6" v-slot="{ valid }"> -->
                     <input type="password" name="password" class="input is-medium" :placeholder="_('Password')" v-model="password" >
                     <span class="icon is-left">
                       <i class="fas fa-unlock-alt"></i>
                     </span>
-                    <span v-show="valid" class="icon is-right" >
+                    <span v-show="false" class="icon is-right" >
                       <i class="fas fa-check"></i>
                     </span>
                     <!-- <span>valid: {{valid}} - {{ errors[0]}}</span> -->
-                    </validation-provider>
+                    <!-- </validation-provider> -->
                   </div>
                 </div>
                 <div class="field">
@@ -43,10 +42,9 @@
                     </div>
                   </div>
                 </div>
-                <button class="button is-fullwidth is-info is-medium" :disabled="!valid" v-on:click="login">login with email</button>
+                <button class="button is-fullwidth is-info is-medium" :disabled="false" v-on:click="login">login with email</button>
                 <div class="has-text-centered" style="margin-top: 20px;">Don't have an account? <router-link to="/register">Register</router-link></div>
               </form>
-              </validation-observer>
             </div>
           </div>
         </div>
@@ -57,19 +55,19 @@
 
 <script>
 import firebase from 'firebase/app'
-import { ValidationObserver, ValidationProvider, extend } from 'vee-validate'
-import { required, email, min } from 'vee-validate/dist/rules'
+// import { ValidationObserver, ValidationProvider, extend } from 'vee-validate'
+// import { required, email, min } from 'vee-validate/dist/rules'
 
-extend('required', required)
-extend('email', email)
-extend('min', min)
+// extend('required', required)
+// extend('email', email)
+// extend('min', min)
 
 export default {
   name: 'login',
-  components: {
-    'validation-observer': ValidationObserver,
-    'validation-provider': ValidationProvider
-  },
+  // components: {
+  //   'validation-observer': ValidationObserver,
+  //   'validation-provider': ValidationProvider
+  // },
   data () {
     return {
       email: '',
@@ -77,7 +75,6 @@ export default {
       message: ''
     }
   },
-
   methods: {
     login () {
       console.log('Login: Go')
