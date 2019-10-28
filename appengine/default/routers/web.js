@@ -35,4 +35,6 @@ router.get('/management/users', users.getUsers)
 router.get('/management/trips', trips.getTrips)
 router.get('/management/flags', flags.getFlags)
 
+router.post('/management/trips/:tripId/recent', trips.updateRecent)
+
 module.exports = router

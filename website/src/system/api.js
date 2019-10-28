@@ -32,22 +32,21 @@ export default {
     } else {
       return Promise.resolve(null)
     }
+  },
+  post: async (url, params) => {
+    var user = firebase.auth().currentUser
+    if (user) {
+      try {
+        const token = await user.getIdToken()
+        const options = {
+          headers: { 'Authorization': 'Bearer ' + token }
+        }
+        return axios.post(url, params, options)
+      } catch (err) {
+        console.log(err)
+      }
+    } else {
+      return Promise.resolve(null)
+    }
   }
-  // post: function (url, token, data) {
-  //   return fetch(url, {
-  //     method: 'post',
-  //     headers: new Headers({
-  //       'Authorization': 'Bearer ' + token
-  //     }),
-  //     body: JSON.stringify(data)
-  //   }).then(status)
-  //     .then(json)
-  //     .then(function(data) {
-  //       return data
-  //     })
-  //     .catch(function(error) {
-  //       throw new Error(error);
-  //     })
-
-  // }
 }

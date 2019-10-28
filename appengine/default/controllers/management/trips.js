@@ -34,3 +34,75 @@ module.exports.getTrips = async function (req, res) {
     res.json({"trips": data})
   })
 }
+
+
+module.exports.updateRecent = async function (req, res) {
+  if (req.token.uid != config.adminUserId) {
+    res.sendStatus(403)
+    res.end()
+
+  }
+  // Get the Trip ID
+  const tripId = req.params.tripId
+
+  // Get the most recent posts for the trip
+  var query = db.collection('trips').doc(tripId).collection('posts').orderBy('date', 'desc').limit(10).get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('   + No Posts')
+      }
+      else {
+        var tripData = {
+          recent: {
+            media: [],
+            message: "",
+            user: null,
+            post: null
+          },
+          updated: null
+        }
+
+        var postCount = 0
+        var mediaCount = 0
+
+        snapshot.forEach(doc => {
+          var data = doc.data()
+  
+          // console.log("Source: ", doc.id, " => ", data.message);
+
+          if (postCount == 0) {
+            tripData.recent.message = data.message
+            tripData.recent.post = {
+              id: doc.id,
+              message: data.message
+            }
+            tripData.recent.user = data.user
+            tripData.updated = data.date
+          }
+
+          // Check the media, because we need the most recent 4 images
+          if (data.media !== undefined) {
+            for (i=0; i<data.media.length; i++) {
+              if (mediaCount < 4) {
+                tripData.recent.media.push(data.media[i])
+                mediaCount += 1
+              }
+            }
+          }
+
+          postCount += 1
+        })
+
+        // Update the Trip
+        return db.collection('trips').doc(tripId).update(tripData)       
+      }
+    })
+    .then(doc => {
+      console.log('Updated trip')
+    })    
+    .catch(err => {
+      console.log('Error', err);
+    });
+
+  res.end()
+}
