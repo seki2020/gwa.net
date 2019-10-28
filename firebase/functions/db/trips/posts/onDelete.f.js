@@ -52,7 +52,7 @@ function deleteMedia(tripId, postData) {
 }
 
 function updateTrip(tripId, tripData, postId, postData) {
-  return db.collection('trips').doc(tripId).collection('posts').orderBy('updated', 'desc').limit(1).get()
+  return db.collection('trips').doc(tripId).collection('posts').orderBy('date', 'desc').limit(1).get()
     .then(snapshot => {
       var lastPostData = null
       var recent = null
