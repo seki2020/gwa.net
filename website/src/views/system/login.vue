@@ -85,35 +85,57 @@ export default {
 
       // const valid = await this.$refs.observer.validate()
       // debugger
-      // if (valid) {
-      console.log(' - Got valid form')
-      firebase.auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            debugger
-            console.log('Login: Got a user')
-            router.replace('/management')
-            // _user_.verify(user)
-            //   .then(function(data) {
-            //     console.log('Login: - verify: success')
-            //     store.dispatch('setUser', user);
-            //     router.replace('/');
-            //   })
-            //   .catch(function(error) {
-            //     console.log('Login: - verify: failure')
-            //     t.message = "This user is not registered"
+      let valid = true
+      if (valid) {
+        console.log(' - Got valid form')
 
-            //     // console.log(error)
-            //   })
-          },
-          error => {
-            debugger
-            this.message = error.message
-            console.log(' Error: ' + this.message)
-          }
-        )
-      // }
+        // let user = await firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        //   // .then(function (user) {
+        //   //   debugger
+        //   //   console.log('Login: Got a user')
+        //   // })
+        //   .catch(function (error) {
+        //     debugger
+        //     // Handle Errors here.
+        //     var errorCode = error.code
+        //     var errorMessage = error.message
+        //     if (errorCode === 'auth/wrong-password') {
+        //       alert('Wrong password.')
+        //     } else {
+        //       alert(errorMessage)
+        //     }
+        //     console.log(error)
+        //   })
+        // debugger
+        // console.log(user)
+
+        firebase.auth()
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(
+            user => {
+              debugger
+              console.log('Login: Got a user')
+              router.replace('/management')
+              // _user_.verify(user)
+              //   .then(function(data) {
+              //     console.log('Login: - verify: success')
+              //     store.dispatch('setUser', user);
+              //     router.replace('/');
+              //   })
+              //   .catch(function(error) {
+              //     console.log('Login: - verify: failure')
+              //     t.message = "This user is not registered"
+
+              //     // console.log(error)
+              //   })
+            },
+            error => {
+              debugger
+              this.message = error.message
+              console.log(' Error: ' + this.message)
+            }
+          )
+      }
     }
   }
 }
