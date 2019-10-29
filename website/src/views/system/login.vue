@@ -6,39 +6,45 @@
           <div class="column is-offset-3 is-6" style="padding-bottom: 60px;">
             <div class="box">
               <h3 class="title has-text-centered has-text-grey">{{ _("Login")}}</h3>
-              <form>
-                <div class="field">
-                  <div class="control has-icons-left has-icons-right">
-                    <input type="email" name="email" class="input is-medium"  :placeholder="_('Email')" v-model.lazy="email"  >
-                    <span class="icon is-left">
-                      <i class="fas fa-envelope"></i>
-                    </span>
-                    <span v-show="false" class="icon is-right" >
-                      <i class="fas fa-check"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="control has-icons-left has-icons-right">
-                    <input type="password" name="password" class="input is-medium"  placeholder="Password" v-model="password" >
-                    <span class="icon is-left">
-                      <i class="fas fa-unlock-alt"></i>
-                    </span>
-                    <span v-show="false" class="icon is-right" >
-                      <i class="fas fa-check"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="message is-danger" v-if="false">
-                    <div class="message-body is-size-7">
-                      {{errorMessage}}
+              <validation-observer ref="observer" v-slot="{ valid }">
+                <form>
+                  <div class="field">
+                    <div class="control has-icons-left has-icons-right">
+                      <validation-provider :name="_('Email')" rules="required|email" v-slot="{ valid }">
+                        <input type="email" name="email" class="input is-medium"  :placeholder="_('Email')" v-model.lazy="email"  >
+                        <span class="icon is-left">
+                          <i class="fas fa-envelope"></i>
+                        </span>
+                        <span v-show="valid" class="icon is-right" >
+                          <i class="fas fa-check"></i>
+                        </span>
+                      </validation-provider>
                     </div>
                   </div>
-                </div>
-                <a class="button is-block is-info is-medium" v-on:click="login">login with email</a>
-                <div class="has-text-centered" style="margin-top: 20px;">Don't have an account? <router-link to="/register">Register</router-link></div>
-              </form>
+                  <div class="field">
+                    <div class="control has-icons-left has-icons-right">
+                      <validation-provider :name="_('Password')" rules="required|min:6" v-slot="{ valid }">
+                        <input type="password" name="password" class="input is-medium"  :placeholder="_('Password')" v-model="password" >
+                        <span class="icon is-left">
+                          <i class="fas fa-unlock-alt"></i>
+                        </span>
+                        <span v-show="valid" class="icon is-right" >
+                          <i class="fas fa-check"></i>
+                        </span>
+                      </validation-provider>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <div class="message is-danger" v-if="message.length > 0">
+                      <div class="message-body is-size-7">
+                        {{message}}
+                      </div>
+                    </div>
+                  </div>
+                  <button class="button is-fullwidth is-info is-medium" :disabled="!valid" v-on:click.prevent="login">login with email</button>
+                  <div class="has-text-centered" style="margin-top: 20px;">Don't have an account? <router-link to="/register">Register</router-link></div>
+                </form>
+              </validation-observer>
             </div>
           </div>
         </div>
@@ -49,9 +55,19 @@
 
 <script>
 import firebase from 'firebase/app'
+import { ValidationObserver, ValidationProvider, extend } from 'vee-validate'
+import { required, email, min } from 'vee-validate/dist/rules'
+
+extend('required', required)
+extend('email', email)
+extend('min', min)
 
 export default {
   name: 'login',
+  components: {
+    'validation-observer': ValidationObserver,
+    'validation-provider': ValidationProvider
+  },
   data () {
     return {
       email: '',
@@ -59,64 +75,26 @@ export default {
       message: ''
     }
   },
-  computed: {
-    // hasErrors () {
-    //   var errors = this.$validator.errors
-    //   return errors.has('email') || errors.has('password') || this.message
-    // },
-    errorMessage () {
-      // var errors = this.$validator.errors
-      // if (errors.has('email')) {
-      //   return errors.first('email')
-      // } else if (errors.has('password')) {
-      //   return errors.first('password')
-      // } else if (this.message) {
-      //   return this.message
-      // }
-      return ''
-    }
-  },
-
   methods: {
-    login () {
-      console.log('Login: Go')
+    async login () {
       this.message = ''
 
       var router = this.$router
-      // var store = this.$store
 
-      // this.$validator.validate().then(valid => {
-      let valid = true
+      let valid = await this.$refs.observer.validate()
       if (valid) {
         console.log(' - Got valid form')
         firebase.auth()
           .signInWithEmailAndPassword(this.email, this.password)
-          .then(
-            user => {
-              debugger
-              console.log('Login: Got a user')
-              router.replace('/management')
-              // _user_.verify(user)
-              //   .then(function(data) {
-              //     console.log('Login: - verify: success')
-              //     store.dispatch('setUser', user);
-              //     router.replace('/');
-              //   })
-              //   .catch(function(error) {
-              //     console.log('Login: - verify: failure')
-              //     t.message = "This user is not registered"
-
-              //     // console.log(error)
-              //   })
-            },
-            error => {
-              debugger
-              this.message = error.message
-              console.log(' Error: ' + this.message)
-            }
-          )
+          .then(user => {
+            console.log('Login: Got a user')
+            router.replace('/management')
+          })
+          .catch(error => {
+            this.message = error.message
+            console.log(' Error: ' + this.message)
+          })
       }
-      // })
     }
   }
 }
