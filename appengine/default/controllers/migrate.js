@@ -206,15 +206,23 @@ module.exports.getPosts = async function (req, res) {
             reference: post.reference,
             timeZoneOffet: post.tz_offset,
             timeZone: post.tz_name,
-            place: {
-              name: post.place,
-              description: post.place,
-              location: new admin.firestore.GeoPoint(post.location.lat, post.location.lon),
-              country: post.country
-            },
             media: [],
             trip: trip,
             user: user
+          }
+
+          location = null
+          if (post.location) {
+            location = new admin.firestore.GeoPoint(post.location.lat, post.location.lon)
+          }
+
+          if(post.place) {
+            data['place'] = {
+              name: post.place,
+              description: post.place,
+              location: location,
+              country: post.country
+            }
           }
 
           // Get the media, create media objects, fetch the media and store
