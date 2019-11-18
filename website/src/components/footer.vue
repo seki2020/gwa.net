@@ -3,17 +3,14 @@
     <div class="columns">
       <div class="column has-text-centered">
         <div class="social-icons" style="margin-bottom: 20px;">
-            <a href="https://twitter.com/aadjemonkeyrock">
-              <i class="fab fa-lg fa-twitter"></i>
+            <a href="https://facebook.com/goingwalkaboutapp">
+              <i class="fab fa-lg fa-facebook"></i>
             </a>
-            <a href="https://www.instagram.com/aadjemonkeyrock/">
+            <a href="https://www.instagram.com/goingwalkaboutapp/">
               <i class="fab fa-lg fa-instagram"></i>
             </a>
-            <a href="https://www.youtube.com/channel/UCNP8ezZTiidpEh5UJCGYoow">
+            <a href="https://www.youtube.com/goingwalkabout">
               <i class="fab fa-lg fa-youtube"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/aadjemonkeyrock/">
-              <i class="fab fa-lg fa-linkedin"></i>
             </a>
         </div>
         <div>{{_('Handmade with')}} <i class="far fa-heart"></i> {{_('in Delft, The Netherlands')}}</div>
@@ -23,7 +20,6 @@
         <div><i class="far fa-copyright"></i> Aadjemonkeyrock {{year}} - <router-link to="/terms">{{ _('Terms') }}</router-link> - <router-link to="/privacy">{{ _('Privacy') }}</router-link></div>
       </div>
     </div>
-    <!-- <div><router-link to="/management">{{ _('Management') }}</router-link></div> -->
   </footer>
 </template>
 
