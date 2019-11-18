@@ -1,9 +1,27 @@
 <template>
   <section class="hero is-large is-primary is-fullheight header-image jarallax">
-    <div class="hero-body">
+    <div class="hero-body" style="padding-top: 3em; padding-bottom: 3em;">
       <div class="container has-text-centered">
-        <h1 class="title is-size-1">Going Walkabout</h1>
-        <h2 class="subtitle">Capture memories, enjoy your travels</h2>
+        <div class="columns is-vcentered">
+          <div class="column xhas-text-centered" style="xbackground-color: yellow;">
+            <!-- <div has-text-centered style="background-color: blue; "> -->
+              <div style="max-width: 360px; margin: 0 auto;">
+              <figure class="image xis-3by5">
+                <img src="../../assets/iphone-sample.png" />
+              </figure>
+              </div>
+            <!-- </div> -->
+            <!-- <img src="../../assets/test-image.jpg" /> -->
+          </div>
+          <div class="column xxhas-text-centered" style="xbackground-color: red; ">
+            <div class="xxhas-text-centered" style="xxpadding: 100px 0;">
+              <h1 class="title is-size-1">Going Walkabout</h1>
+              <h2 class="subtitle">Capture memories, enjoy your travels</h2>
+              <a href="https://itunes.apple.com/app/id1476918517" target="_blank"><img src="../../assets/apple/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg" /></a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <div>
