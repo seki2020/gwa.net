@@ -1,4 +1,4 @@
-debugger
+// debugger
 
 const admin = require('firebase-admin')
 
