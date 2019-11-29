@@ -66,9 +66,16 @@ export default {
       })
   },
   methods: {
+    refresh () {
+      api.get('/web/management/trips')
+        .then(response => {
+          this.trips = response.data.trips
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     updateRecent (tripId) {
-      console.log(`Update recent: ${tripId}`)
-
       const url = `/web/management/trips/${tripId}/recent`
       api.post(url)
         .then(response => {
@@ -79,7 +86,15 @@ export default {
         })
     },
     updateFollowers (tripId) {
-      console.log(`Update followers: ${tripId}`)
+      const url = `/web/management/trips/${tripId}/followers`
+      api.post(url)
+        .then(response => {
+          console.log(response)
+          self.refresh()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }

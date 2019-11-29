@@ -36,5 +36,6 @@ router.get('/management/trips', trips.getTrips)
 router.get('/management/flags', flags.getFlags)
 
 router.post('/management/trips/:tripId/recent', trips.updateRecent)
+router.post('/management/trips/:tripId/followers', trips.updateFollowers)
 
 module.exports = router

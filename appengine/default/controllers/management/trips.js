@@ -8,6 +8,8 @@ module.exports.getTrips = async function (req, res) {
     res.end()
   }
 
+  console.log("Get trips")
+
   let trips = db.collection('trips').orderBy('created', 'desc').limit(100)
   trips.get().then(function(querySnapshot) {
     // Collect the data
@@ -103,6 +105,43 @@ module.exports.updateRecent = async function (req, res) {
     .catch(err => {
       console.log('Error', err);
     });
+
+  res.end()
+}
+
+module.exports.updateFollowers = async function (req, res) {
+  if (req.token.uid != config.adminUserId) {
+    res.sendStatus(403)
+    res.end()
+
+  }
+  // Get the Trip ID
+  const tripId = req.params.tripId
+
+  var query = db.collection('trips').doc(tripId).collection('followers').get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        console.log('   + No followers')
+      }
+      else {
+        console.log(` got followers: ${snapshot.size}`)
+
+        var data = {
+          followers: snapshot.size
+        }
+
+        return db.collection('trips').doc(tripId).update(data)       
+      }
+    })
+    .then(doc => {
+      console.log('Updated trip')
+    })    
+    .catch(err => {
+      console.log('Error', err);
+    });
+
+  // Get the most recent posts for the trip
+  console.log('Update followers')
 
   res.end()
 }
