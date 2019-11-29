@@ -14,8 +14,8 @@ import XFooter from '@/components/footer'
 export default {
   name: 'home',
   components: {
-    'intro': Intro,
-    'goingwalkabout': GoingWalkabout,
+    intro: Intro,
+    goingwalkabout: GoingWalkabout,
     'x-footer': XFooter
   }
 }

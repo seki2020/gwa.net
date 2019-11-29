@@ -81,7 +81,7 @@ export default {
 
       var router = this.$router
 
-      let valid = await this.$refs.observer.validate()
+      const valid = await this.$refs.observer.validate()
       if (valid) {
         console.log(' - Got valid form')
         firebase.auth()

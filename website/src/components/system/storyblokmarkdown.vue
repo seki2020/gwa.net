@@ -31,7 +31,7 @@ export default {
   created () {
     Storyblok.get(`cdn/stories/${this.slug}`, { version: 'draft' })
       .then(response => {
-        let story = response.data.story
+        const story = response.data.story
 
         this.text = marked(story.content.text)
       }).catch(error => {

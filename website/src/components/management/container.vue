@@ -47,7 +47,7 @@ export default {
       user.getIdToken()
         .then((token) => {
           const options = {
-            headers: { 'Authorization': 'Bearer ' + token }
+            headers: { Authorization: 'Bearer ' + token }
           }
           return axios.get('/web/management/', options)
         })

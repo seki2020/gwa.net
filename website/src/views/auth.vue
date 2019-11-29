@@ -97,7 +97,7 @@ export default {
   mounted () {
     const auth = firebase.auth()
 
-    let q = this.$route.query
+    const q = this.$route.query
     this.mode = q.mode
     this.actionCode = q.oobCode
 

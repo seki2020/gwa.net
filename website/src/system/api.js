@@ -19,7 +19,7 @@ export default {
       return user.getIdToken()
         .then((token) => {
           const options = {
-            headers: { 'Authorization': 'Bearer ' + token }
+            headers: { Authorization: 'Bearer ' + token }
           }
           return axios.get(url, options)
         })
@@ -39,7 +39,7 @@ export default {
       try {
         const token = await user.getIdToken()
         const options = {
-          headers: { 'Authorization': 'Bearer ' + token }
+          headers: { Authorization: 'Bearer ' + token }
         }
         return axios.post(url, params, options)
       } catch (err) {

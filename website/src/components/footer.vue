@@ -29,7 +29,7 @@ export default {
   name: 'x-footer',
   computed: {
     year () {
-      let d = new Date()
+      const d = new Date()
       return d.getFullYear()
     }
   }

@@ -61,7 +61,7 @@ export default {
     }
   },
   created () {
-    Storyblok.get(`cdn/stories`, {
+    Storyblok.get('cdn/stories', {
       version: 'draft',
       starts_with: locale + 'videos/',
       per_page: 4,

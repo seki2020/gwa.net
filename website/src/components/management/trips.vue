@@ -69,7 +69,7 @@ export default {
     updateRecent (tripId) {
       console.log(`Update recent: ${tripId}`)
 
-      let url = `/web/management/trips/${tripId}/recent`
+      const url = `/web/management/trips/${tripId}/recent`
       api.post(url)
         .then(response => {
           console.log(response)
