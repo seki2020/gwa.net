@@ -32,10 +32,13 @@ router.use((req, res, next) => {
 
 router.get('/management/', base.getPermissions)
 router.get('/management/users', users.getUsers)
-router.get('/management/trips', trips.getTrips)
-router.get('/management/flags', flags.getFlags)
+router.post('/management/users/:userId/trips', users.updateTrips)
 
+router.get('/management/trips', trips.getTrips)
 router.post('/management/trips/:tripId/recent', trips.updateRecent)
 router.post('/management/trips/:tripId/followers', trips.updateFollowers)
+router.post('/management/trips/:tripId/posts', trips.updatePosts)
+
+router.get('/management/flags', flags.getFlags)
 
 module.exports = router

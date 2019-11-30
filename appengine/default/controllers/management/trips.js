@@ -22,6 +22,7 @@ module.exports.getTrips = async function (req, res) {
       let result = {
         'id': doc.id,
         'name': doc.name,
+        'user': doc.user.name,
         'shared': doc.shared,
         'featured': doc.featured,
         'followers': doc.followers,
@@ -48,7 +49,7 @@ module.exports.updateRecent = async function (req, res) {
   const tripId = req.params.tripId
 
   // Get the most recent posts for the trip
-  var query = db.collection('trips').doc(tripId).collection('posts').orderBy('date', 'desc').limit(10).get()
+  db.collection('trips').doc(tripId).collection('posts').orderBy('date', 'desc').limit(10).get()
     .then(snapshot => {
       if (snapshot.empty) {
         console.log('   + No Posts')
@@ -117,17 +118,19 @@ module.exports.updateFollowers = async function (req, res) {
   }
   // Get the Trip ID
   const tripId = req.params.tripId
+  var followers = null
 
-  var query = db.collection('trips').doc(tripId).collection('followers').get()
+  db.collection('trips').doc(tripId).collection('followers').get()
     .then(snapshot => {
       if (snapshot.empty) {
         console.log('   + No followers')
       }
       else {
-        console.log(` got followers: ${snapshot.size}`)
+        followers = snapshot.size
+        console.log(` got followers: ${followers}`)
 
         var data = {
-          followers: snapshot.size
+          followers: followers
         }
 
         return db.collection('trips').doc(tripId).update(data)       
@@ -135,13 +138,37 @@ module.exports.updateFollowers = async function (req, res) {
     })
     .then(doc => {
       console.log('Updated trip')
+      res.json({"followers": followers})      
     })    
     .catch(err => {
       console.log('Error', err);
+      res.end()
     });
+}
 
-  // Get the most recent posts for the trip
-  console.log('Update followers')
+module.exports.updatePosts = async function (req, res) {
+  if (req.token.uid != config.adminUserId) {
+    res.sendStatus(403)
+    res.end()
 
-  res.end()
+  }
+  // Get the Trip ID
+  const tripId = req.params.tripId
+  var posts = null
+
+  db.collection('trips').doc(tripId).collection('posts').get()
+    .then(snapshot => {
+      if (!snapshot.empty) {
+        posts = snapshot.size
+
+        return db.collection('trips').doc(tripId).update({posts: posts})       
+      }
+    })
+    .then(doc => {
+      res.json({"posts": posts})      
+    })    
+    .catch(err => {
+      console.log('Error', err);
+      res.end()
+    });
 }

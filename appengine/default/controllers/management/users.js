@@ -33,3 +33,30 @@ module.exports.getUsers = async function (req, res) {
     res.json({"users": data})
   })
 }
+
+module.exports.updateTrips = async function (req, res) {
+  if (req.token.uid != config.adminUserId) {
+    res.sendStatus(403)
+    res.end()
+
+  }
+  // Get the Trip ID
+  const userId = req.params.userId
+  var trips = null
+
+  db.collection('trips').where('user.id', '==', userId).get()
+    .then(snapshot => {
+      if (!snapshot.empty) {
+        trips = snapshot.size
+
+        return db.collection('users').doc(userId).update({trips: trips})       
+      }
+    })
+    .then(doc => {
+      res.json({"trips": trips})      
+    })    
+    .catch(err => {
+      console.log('Error', err);
+      res.end()
+    });
+}

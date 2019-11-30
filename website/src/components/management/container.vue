@@ -2,7 +2,7 @@
   <div>
     <div class="container is-fullhd" v-if="isAuthorized">
       <div class="columns">
-        <div class="column is-one-quarter">
+        <div class="column is-one-fifth">
           <aside class="menu">
             <p class="menu-label">
               {{ _('General')}}
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div v-else>
-      <p>No permissions</p>
+      <p>{{ _('No permissions')}}</p>
     </div>
   </div>
 </template>
