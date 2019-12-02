@@ -1,5 +1,3 @@
-// debugger
-
 const admin = require('firebase-admin')
 
 // Test data
@@ -8,7 +6,6 @@ const userData = {
   name: 'Demo user',
   bio: 'Testing'
 }
-
 
 describe('Firestore Triggers 1', () => {
   let db;
@@ -41,6 +38,4 @@ describe('Firestore Triggers 1', () => {
       expect(user.exists).toBe(true)
     })
   })
-
-
 })

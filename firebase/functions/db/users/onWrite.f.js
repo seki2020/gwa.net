@@ -10,6 +10,8 @@ exports = module.exports = functions.region('europe-west1').firestore
 
       const [action, oldDocument, newDocument] = getAction(change)
 
+      console.log("User - onWrite")
+
       if (action === 'update' && isPropDirty('name', oldDocument, newDocument)) {
         const db = admin.firestore()
         return db.collectionGroup('followers').where('user.id', '==', userId).get()
