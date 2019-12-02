@@ -20,8 +20,8 @@ exports = module.exports = functions.region('europe-west1').firestore
         // Update the Follower
         return followerRef.update({
           'trip.name': tripData.name,
-          recent: tripData.recent,
-          // recent: tripData.recent !== undefined ? tripData.recent : null,
+          // recent: tripData.recent,
+          recent: tripData.recent !== undefined ? tripData.recent : null,
           updated: tripData.updated,
         })       
       })

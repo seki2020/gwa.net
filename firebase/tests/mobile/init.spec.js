@@ -18,7 +18,6 @@ describe('Firestore Triggers 1', () => {
 
   afterAll(async () => {
     console.log("afterAll")
-    // No teardown necessary
   })
 
   describe('User initialization', () => {
