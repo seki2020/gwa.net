@@ -13,6 +13,9 @@ exports = module.exports = functions.region('europe-west1').firestore
     const isDirtyRecent = isPropDirty('recent', oldDocument, newDocument) 
     const isDirtyName = isPropDirty('name', oldDocument, newDocument) 
     const isDirtyPrivate = isPropDirty('shared', oldDocument, newDocument) 
+
+    const isDirtyCountries = isPropDirty('countries', oldDocument, newDocument) 
+    const isDirtyContinents = isPropDirty('continents', oldDocument, newDocument) 
     
     if (newDocument.deleted || (!isDirtyRecent && !isDirtyName && !isDirtyPrivate)) {
       return true
@@ -37,6 +40,23 @@ exports = module.exports = functions.region('europe-west1').firestore
         // Commit the batch
         return batch.commit();          
       })
+      .then(() => {
+        // Check if countries or continents are dirty
+        if (isDirtyCountries || isDirtyContinents) {
+          console.log("go update the user")
+          console.log("countries: ", newDocument.countries)
+          console.log("continents: ", newDocument.continents )
+          // Update the user.
+          const userId = newDocument.user.id
+          const userRef = db.collection("users").doc(userId);
+          return userRef.update({
+            countries: admin.firestore.FieldValue.arrayUnion(...newDocument.countries),
+            continents: admin.firestore.FieldValue.arrayUnion(...newDocument.continents)
+          })    
+        }
+
+        return true
+      })      
       .catch(err => {
         console.error(err);
       })

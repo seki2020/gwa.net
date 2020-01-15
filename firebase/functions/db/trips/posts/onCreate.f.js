@@ -3,8 +3,8 @@ const admin = require('firebase-admin')
 
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 const { getAction, isPropDirty } = require('../../utils')
-
-
+const { continentForCountry } = require('../../countries')
+ 
 exports = module.exports = functions.region('europe-west1').firestore
   .document('trips/{tripId}/posts/{postId}')
   .onCreate((snapshot, context) => {
@@ -54,12 +54,19 @@ exports = module.exports = functions.region('europe-west1').firestore
         if (country && !countries.includes(country)) {
           countries.push(country)
         }
+        // Find the continent
+        var continents = tripData.continents ? tripData.continents : []
+        continent = continentForCountry(country)
+        if (continent && !continents.includes(continent)) {
+          continents.push(continent)
+        }
 
         // Update the Trip
         var data = {
           recent: recent,
           updated: postData.date,
           countries: countries,
+          continents: continents,
           posts: FieldValue.increment(1)
         }
         return tripRef.update(data)       
