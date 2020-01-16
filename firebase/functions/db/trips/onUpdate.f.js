@@ -43,9 +43,6 @@ exports = module.exports = functions.region('europe-west1').firestore
       .then(() => {
         // Check if countries or continents are dirty
         if (isDirtyCountries || isDirtyContinents) {
-          console.log("go update the user")
-          console.log("countries: ", newDocument.countries)
-          console.log("continents: ", newDocument.continents )
           // Update the user.
           const userId = newDocument.user.id
           const userRef = db.collection("users").doc(userId);
