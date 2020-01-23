@@ -1,7 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin')
 
-// const FieldValue = require('firebase-admin').firestore.FieldValue;
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 // const { getAction, isPropDirty } = require('../../utils')
 
 exports = module.exports = functions.region('europe-west1').firestore
@@ -18,6 +18,10 @@ exports = module.exports = functions.region('europe-west1').firestore
       return true
     }
 
+    // Tokens
+    var tokens = []
+    var unreadNotifications
+
     // Get the user
     const db = admin.firestore()
     const userRef = db.collection("users").doc(userId);
@@ -26,10 +30,28 @@ exports = module.exports = functions.region('europe-west1').firestore
         if (!doc.exists) {
           throw new Error('User does not exist')
         }
-        const userData = doc.data()
+        let userData = doc.data()
 
-        // Get the tokens for this user
-        const tokens = userData.fcmTokens
+        // Keep the tokens
+        tokens = userData.fcmTokens
+        unreadNotifications = userData.unreadNotifications
+        if (!unreadNotifications || unreadNotifications < 0) {
+          unreadNotifications = 0
+        }
+
+        // Update the user with unread count
+        if (!notification.read) {
+          unreadNotifications += 1
+          return userRef.update({
+            unreadNotifications: FieldValue.increment(1)
+          })
+        }
+        else {
+          return true
+        }
+      })
+      .then(() => {
+        // Send the notifications
         if(tokens.length > 0) {
           // No tokens, no notifications
           var body = notification.trip.name + ': ' + notification.post.message
@@ -55,8 +77,8 @@ exports = module.exports = functions.region('europe-west1').firestore
               },
               payload: {
                   aps: {
-                      sound: 'default'
-                      // badge: #unread messages
+                      sound: 'default',
+                      badge: unreadNotifications
                   }
               },
             },
