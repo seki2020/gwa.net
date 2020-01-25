@@ -38,6 +38,7 @@ router.get('/management/trips', trips.getTrips)
 router.post('/management/trips/:tripId/recent', trips.updateRecent)
 router.post('/management/trips/:tripId/followers', trips.updateFollowers)
 router.post('/management/trips/:tripId/posts', trips.updatePosts)
+router.post('/management/trips/:tripId/continents', trips.updateContinents)
 
 router.get('/management/flags', flags.getFlags)
 

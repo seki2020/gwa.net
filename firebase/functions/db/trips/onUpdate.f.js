@@ -17,28 +17,31 @@ exports = module.exports = functions.region('europe-west1').firestore
     const isDirtyCountries = isPropDirty('countries', oldDocument, newDocument) 
     const isDirtyContinents = isPropDirty('continents', oldDocument, newDocument) 
     
-    if (newDocument.deleted || (!isDirtyRecent && !isDirtyName && !isDirtyPrivate)) {
+    if (newDocument.deleted || (!isDirtyRecent && !isDirtyName && !isDirtyPrivate && !isDirtyCountries && !isDirtyContinents)) {
       return true
     }
 
     const db = admin.firestore()
     return db.collection('trips').doc(tripId).collection('followers').get()
       .then(snapshot => {
-        var data = {
-          'recent': newDocument.recent ? newDocument.recent : null,
-          'shared': newDocument.shared,
-          'trip.name': newDocument.name,
-          'updated': newDocument.updated
+        if (isDirtyRecent || isDirtyName || isDirtyPrivate) {
+          var data = {
+            'recent': newDocument.recent ? newDocument.recent : null,
+            'shared': newDocument.shared,
+            'trip.name': newDocument.name,
+            'updated': newDocument.updated
+          }
+    
+          // Once we get the results, begin a batch
+          var batch = db.batch();
+          snapshot.forEach(doc => {
+            batch.update(doc.ref, data);
+          });
+    
+          // Commit the batch
+          return batch.commit();       
         }
-  
-        // Once we get the results, begin a batch
-        var batch = db.batch();
-        snapshot.forEach(doc => {
-          batch.update(doc.ref, data);
-        });
-  
-        // Commit the batch
-        return batch.commit();          
+        return true
       })
       .then(() => {
         // Check if countries or continents are dirty
@@ -51,7 +54,6 @@ exports = module.exports = functions.region('europe-west1').firestore
             continents: admin.firestore.FieldValue.arrayUnion(...newDocument.continents)
           })    
         }
-
         return true
       })      
       .catch(err => {

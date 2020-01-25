@@ -2,6 +2,9 @@ const admin = require('firebase-admin')
 const db = admin.firestore()
 const config = require('../../secrets/config')
 
+const { continentForCountry } = require('../../system/countries')
+
+
 module.exports.getTrips = async function (req, res) {
   if (req.token.uid != config.adminUserId) {
     res.sendStatus(403)
@@ -27,6 +30,8 @@ module.exports.getTrips = async function (req, res) {
         'featured': doc.featured,
         'followers': doc.followers,
         'posts': doc.posts,
+        'countries': doc.countries ? doc.countries : [],
+        'continents': doc.continents ? doc.continents : [],
         'created': doc.created.toDate(),
         'updated': doc.updated.toDate()
       }
@@ -166,6 +171,48 @@ module.exports.updatePosts = async function (req, res) {
     })
     .then(doc => {
       res.json({"posts": posts})      
+    })    
+    .catch(err => {
+      console.log('Error', err);
+      res.end()
+    });
+}
+
+module.exports.updateContinents = async function (req, res) {
+  if (req.token.uid != config.adminUserId) {
+    res.sendStatus(403)
+    res.end()
+  }
+  // Get the Trip ID
+  const tripId = req.params.tripId
+  var continents = []
+
+  console.log('update continents')
+
+  db.collection('trips').doc(tripId).get()
+    .then(doc => {
+      if (doc.exists) {
+        const tripData = doc.data()
+
+        const countries = tripData.countries
+        
+        countries.forEach(country => {
+          console.log(country)
+          var continent = continentForCountry(country)
+          console.log(continent)
+
+          if (!continents.includes(continent)) {
+            continents.push(continent)
+          }
+          
+        })
+        console.log(continents)
+
+        return db.collection('trips').doc(tripId).update({continents: continents})       
+      }
+    })
+    .then(doc => {
+      res.json({"continents": continents})      
     })    
     .catch(err => {
       console.log('Error', err);

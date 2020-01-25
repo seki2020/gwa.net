@@ -6,6 +6,8 @@
           <th>{{_('Created')}}</th>
           <th>{{_('Name')}}</th>
           <th>{{_('Email')}}</th>
+          <th>{{_('Countries')}}</th>
+          <th>{{_('Continents')}}</th>
           <th>{{_('Trips')}}</th>
           <th></th>
         </tr>
@@ -15,7 +17,19 @@
           <td>{{user.created | formatDate}}</td>
           <td>{{user.name}}</td>
           <td>{{user.email}}</td>
-          <td>{{user.trips}}</td>
+          <td>
+            <span v-for="(c, ix) in user.countries" :key="c">
+              <span>{{c}}</span>
+              <span v-if="ix+1 < user.countries.length">, </span>
+            </span>
+          </td>
+          <td>
+            <span v-for="(c, ix) in user.continents" :key="c">
+              <span>{{c}}</span>
+              <span v-if="ix+1 < user.continents.length">, </span>
+            </span>
+          </td>
+          <td class="has-text-right">{{user.trips}}</td>
           <td>
             <div class="dropdown is-hoverable is-right">
               <div class="dropdown-trigger">

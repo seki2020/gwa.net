@@ -6,6 +6,8 @@
           <th>{{_('Created')}}</th>
           <th>{{_('Name')}}</th>
           <th>{{_('User')}}</th>
+          <th>{{_('Countries')}}</th>
+          <th>{{_('Continents')}}</th>
           <th>{{_('Public')}}</th>
           <th>{{_('Featured')}}</th>
           <th>{{_('Followers')}}</th>
@@ -18,10 +20,22 @@
           <td>{{trip.created | formatDate}}</td>
           <td>{{trip.name}}</td>
           <td>{{trip.user}}</td>
+          <td>
+            <span v-for="(c, ix) in trip.countries" :key="c">
+              <span>{{c}}</span>
+              <span v-if="ix+1 < trip.countries.length">, </span>
+            </span>
+          </td>
+          <td>
+            <span v-for="(c, ix) in trip.continents" :key="c">
+              <span>{{c}}</span>
+              <span v-if="ix+1 < trip.continents.length">, </span>
+            </span>
+          </td>
           <td><i v-if="trip.shared" class="fas fa-check"></i></td>
           <td><i v-if="trip.featured" class="fas fa-check"></i></td>
-          <td>{{trip.followers}}</td>
-          <td>{{trip.posts}}</td>
+          <td class="has-text-right">{{trip.followers}}</td>
+          <td class="has-text-right">{{trip.posts}}</td>
           <td>
             <div class="dropdown is-hoverable is-right">
               <div class="dropdown-trigger">
@@ -37,6 +51,9 @@
                   </a>
                   <a href="#" class="dropdown-item" @click="updatePosts(trip.id)">
                     {{_('Update posts')}}
+                  </a>
+                  <a href="#" class="dropdown-item" @click="updateContinents(trip.id)">
+                    {{_('Update continents')}}
                   </a>
                 </div>
 
@@ -110,7 +127,30 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    updateContinents (tripId) {
+      console.log('do it')
+      const url = `/web/management/trips/${tripId}/continents`
+      api.post(url)
+        .then(response => {
+          if (response.data.continents) {
+            console.log(response.data.continents)
+
+            this.trips.forEach(element => {
+              console.log(element.id)
+              if (element.id === tripId) {
+                console.log('yes')
+                // element.name = 'foo'
+                element.continents = response.data.continents
+              }
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+
   }
 }
 </script>

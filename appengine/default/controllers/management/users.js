@@ -23,6 +23,8 @@ module.exports.getUsers = async function (req, res) {
         'name': doc.name,
         'email': doc.email,
         'trips': doc.trips,
+        'countries': doc.countries ? doc.countries : [],
+        'continents': doc.continents ? doc.continents : [],
         'created': doc.created.toDate(),
         'updated': doc.updated.toDate()
       }
