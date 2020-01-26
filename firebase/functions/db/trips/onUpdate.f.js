@@ -48,11 +48,28 @@ exports = module.exports = functions.region('europe-west1').firestore
         if (isDirtyCountries || isDirtyContinents) {
           // Update the user.
           const userId = newDocument.user.id
-          const userRef = db.collection("users").doc(userId);
-          return userRef.update({
-            countries: admin.firestore.FieldValue.arrayUnion(...newDocument.countries),
-            continents: admin.firestore.FieldValue.arrayUnion(...newDocument.continents)
-          })    
+          // const newCountries = newDocument.countries ? newDocument.countries : []
+          // const newContinents = newDocument.continents ? newDocument.continents : []
+
+          var update = false
+          var data = {}
+          if (newDocument.countries && newDocument.countries.length > 0) {
+            update = true
+            data['countries'] = admin.firestore.FieldValue.arrayUnion(...newDocument.countries)
+          }
+          if (newDocument.continents && newDocument.continents.length > 0) {
+            update = true
+            data['continents'] = admin.firestore.FieldValue.arrayUnion(...newDocument.continents)
+          }
+
+          if (update) {
+            const userRef = db.collection("users").doc(userId);
+            return userRef.update(data)    
+          }
+          else {
+            return true
+          }
+
         }
         return true
       })      

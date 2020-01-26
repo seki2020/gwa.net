@@ -88,6 +88,7 @@ module.exports.getTrips = async function (req, res) {
             }
           },
           created: admin.firestore.Timestamp.fromDate(new  Date(trip.from.date + 'Z')),
+          updated: admin.firestore.Timestamp.fromDate(new  Date(trip.from.date + 'Z')),
           user: user
         }
         // Add a new document with a generated id.
