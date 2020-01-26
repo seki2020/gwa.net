@@ -72,7 +72,7 @@ export default {
     Storyblok.get('cdn/stories', {
       version: 'draft',
       starts_with: locale + 'videos/',
-      per_page: 50,
+      per_page: 60,
       sort_by: 'content.date:asc'
     }).then(response => {
       this.videos = response.data.stories

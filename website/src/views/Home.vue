@@ -1,21 +1,24 @@
 <template>
   <div>
     <intro></intro>
-    <goingwalkabout></goingwalkabout>
+    <howto></howto>
+    <story></story>
     <x-footer></x-footer>
   </div>
 </template>
 
 <script>
 import Intro from '@/components/home/intro'
-import GoingWalkabout from '@/components/home/goingwalkabout'
+import Story from '@/components/home/story'
+import HowTo from '@/components/home/howto'
 import XFooter from '@/components/footer'
 
 export default {
   name: 'home',
   components: {
     intro: Intro,
-    goingwalkabout: GoingWalkabout,
+    story: Story,
+    howto: HowTo,
     'x-footer': XFooter
   }
 }

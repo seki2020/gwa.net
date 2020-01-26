@@ -7,7 +7,8 @@ import Terms from './views/terms'
 import Privacy from './views/privacy'
 import Links from './views/links'
 import Auth from './views/auth'
-import GoingWalkabout from './views/goingwalkabout'
+import Story from './views/story'
+import HowTo from './views/howto'
 
 Vue.use(Router)
 
@@ -25,7 +26,10 @@ export default new Router({
       path: '/register', name: 'register', component: Register
     },
     {
-      path: '/goingwalkabout', name: 'goingwalkabout', component: GoingWalkabout
+      path: '/howto', name: 'howto', component: HowTo
+    },
+    {
+      path: '/story', name: 'story', component: Story
     },
     {
       path: '/terms', name: 'terms', component: Terms

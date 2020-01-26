@@ -31,7 +31,7 @@
         </div>
       </div>
       <p class="content has-text-centered"><a class="button is-primary" href="https://www.youtube.com/channel/UCK1zKCoLY61Xb9UgGyjGarQ?sub_confirmation=1" target="_blank"><strong>{{ _('Subscribe')}}</strong></a></p>
-      <p class="content has-text-centered"><router-link to="/goingwalkabout">{{ _('See all of Going Walkabout')}}</router-link></p>
+      <p class="content has-text-centered has-text-weight-semibold"><router-link to="/story">{{ _('See the full story of Going Walkabout')}}</router-link></p>
      </div>
   </section>
 </template>
