@@ -2,7 +2,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin')
 
 const FieldValue = require('firebase-admin').firestore.FieldValue;
-// const { getAction, isPropDirty } = require('../../utils')
 
 exports = module.exports = functions.region('europe-west1').firestore
   .document('users/{userId}/notifications/{notificationId}')
